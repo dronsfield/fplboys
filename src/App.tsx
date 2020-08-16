@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1rem;
     font-family: sans-serif;
     margin: 0;
+    padding-bottom: 1.5rem;
   }
 
   html {
@@ -20,7 +21,16 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
 
   }
+
+  p:first-child {
+    margin-top: 0;
+  }
+  p:last-child {
+    margin-bottom: 0;
+  }
 `
+
+const desktop = `@media (min-width: 600px)`
 
 export const normalizeButton = `
   border: 0;
@@ -53,8 +63,10 @@ const BannerContainer = styled.div`
     linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
     url('/images/banner-1.jpg');
   background-size: auto, auto, cover;
+  background-image: url('/images/banner-1.jpg');
+  background-size: cover;
   background-position: top center;
-  max-height: 300px;
+  max-height: 500px;
   min-height: 0;
   overflow: hidden;
   position: relative;
@@ -82,7 +94,7 @@ const BannerText = styled.div`
 function Banner() {
   return (
     <BannerContainer>
-      <BannerText>F P L B O Y S</BannerText>
+      {/* <BannerText>F P L B O Y S</BannerText> */}
     </BannerContainer>
   )
 }
@@ -94,8 +106,8 @@ const CodeBox = styled.div`
   flex-direction: row;
   align-items: center;
   background-color: #eee;
-  font-size: 1.5rem;
-  color: #888;
+  font-size: 1.3rem;
+  color: #777;
 `
 
 const CodeText = styled.div`
@@ -103,6 +115,7 @@ const CodeText = styled.div`
   text-align: center;
   font-family: IBM Plex Mono, monospace;
   letter-spacing: 0.2em;
+  text-transform: uppercase;
   &:focus {
     border: 0;
     outline: 0;
@@ -110,7 +123,7 @@ const CodeText = styled.div`
 `
 
 const CodeInput = styled.input`
-  position: fixed;
+  position: absolute;
   opacity: 0;
   pointer-events: none;
 `
@@ -126,15 +139,27 @@ const CopyButton = styled.button`
 `
 
 const ContentContainer = styled.div`
-  max-width: 800px;
+  max-width: 600px;
   margin: auto;
-  padding: 2em;
+  padding: 1.5rem;
   font-size: 1rem;
+  ${desktop} {
+    padding: 2rem;
+  }
+`
+
+const AllContentContainer = styled(ContentContainer)`
+  padding-left: 0;
+  padding-right: 0;
 `
 
 const Gutter = styled.div`
-  width: 0.8rem;
-  height: 0.8rem;
+  ${desktop} {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  width: 0.6rem;
+  height: 0.6rem;
 `
 
 const Row = styled.div`
@@ -147,7 +172,6 @@ const Button = styled.button<{ color?: string }>`
   height: 3rem;
   line-height: 3rem;
   flex: 1;
-  font-size: 1.2rem;
   text-transform: uppercase;
   text-align: center;
   color: white;
@@ -155,6 +179,30 @@ const Button = styled.button<{ color?: string }>`
   text-decoration: none;
   font-family: IBM Plex Mono, monospace;
   letter-spacing: 0.05em;
+  ${desktop} {
+    font-size: 1.2rem;
+  }
+`
+
+const TitleText = styled.div`
+  font-family: IBM Plex Mono, monospace;
+  font-weight: 500;
+  font-size: 2rem;
+  text-align: justify;
+  text-align-last: justify;
+  ${desktop} {
+    font-size: 3rem;
+  }
+`
+
+const SubTitleText = styled.div`
+  font-size: 1.1rem;
+  white-space: pre;
+  text-align: center;
+
+  ${desktop} {
+    font-size: 1.4rem;
+  }
 `
 
 const Link = (
@@ -168,75 +216,95 @@ function App() {
       <div className='App'>
         <Banner />
       </div>
-      <ContentContainer>
-        <p style={{ fontSize: '1.5rem' }}>
-          <strong>
-            Your favourite FPL league is back for the 20/21 season!
-          </strong>
-        </p>
-      </ContentContainer>
-      <ContentContainer>
-        <p>Entry fee is £10.</p>
-        <p>Prizepool distribution is TBC.</p>
-        <Gutter />
-        <CodeBox>
-          <CodeText children={LEAGUE_CODE} />
-          <CodeInput
-            id='league-code-text'
-            readOnly
-            type='text'
-            value={LEAGUE_CODE}
-            tabIndex={-1}
-          />
-          <CopyButton
-            onClick={() => {
-              const copyText = document.getElementById(
-                'league-code-text'
-              ) as HTMLInputElement
-              if (copyText) {
-                copyText.select()
-                document.execCommand('copy')
-                copyText.blur()
-                window.alert(`"${LEAGUE_CODE}" copied to clipboard`)
-              }
-            }}
-          >
-            <CopyIcon />
-          </CopyButton>
-        </CodeBox>
-        <Gutter />
-        <Row>
-          <Link
-            children='Auto-join'
-            href={`https://fantasy.premierleague.com/leagues/auto-join/${LEAGUE_CODE}`}
-          />
+      <AllContentContainer>
+        <ContentContainer>
+          <TitleText children='F P L B O Y S' />
+          {/* <div
+          style={{ fontSize: 20, textAlign: 'center', fontWeight: 700 }}
+          children='returns for the 20/21 season!'
+        /> */}
+          {/* <Gutter />
+        <SubTitleText
+          children={`Your favourite FPL league is\nback for the 20/21 season!`}
+        /> */}
+        </ContentContainer>
+        <ContentContainer>
+          <p>Your favourite FPL league is back for 20/21!</p>
+          <p>Entry fee is £10.</p>
+          <p>Prizepool distribution is TBC.</p>
+          <CodeBox>
+            <CodeText children={LEAGUE_CODE} />
+            <CodeInput
+              id='league-code-text'
+              readOnly
+              type='text'
+              value={LEAGUE_CODE}
+              tabIndex={-1}
+            />
+            <CopyButton
+              onClick={() => {
+                const copyText = document.getElementById(
+                  'league-code-text'
+                ) as HTMLInputElement
+                if (copyText) {
+                  copyText.select()
+                  document.execCommand('copy')
+                  copyText.blur()
+                  window.alert(`"${LEAGUE_CODE}" copied to clipboard`)
+                }
+              }}
+            >
+              <CopyIcon />
+            </CopyButton>
+          </CodeBox>
           <Gutter />
-          <Link
-            children='Payment'
-            href='https://monzo.me/joshuadronsfield/10.00?d=FPL - Please put your name here'
-          />
-        </Row>
-      </ContentContainer>
-      <ContentContainer>
-        <p>
-          New to fantasy football? We use the official Fantasy Premier League.
-        </p>
-        <p>Here's some links to help you get started.</p>
-        <Gutter />
-        <Row>
-          <Link
-            children='Info'
-            href='https://www.premierleague.com/news/1751439'
-          />
+          <Row>
+            <Link
+              children='Auto-join'
+              href={`https://fantasy.premierleague.com/leagues/auto-join/${LEAGUE_CODE}`}
+            />
+            <Gutter />
+            <Link
+              children='Payment'
+              href='https://monzo.me/joshuadronsfield/10.00?d=FPL - Please put your name here'
+            />
+          </Row>
+        </ContentContainer>
+        <ContentContainer>
+          <p>
+            The first match of the season is on{' '}
+            <strong>Saturday 12th September</strong> so make sure you've
+            selected your team before then.
+          </p>
+          <p>
+            Please put your name in the payment reference so we can tell who's
+            paid.
+          </p>
+        </ContentContainer>
+        <ContentContainer>
+          <p>
+            New to fantasy football? We use the official Fantasy Premier League.
+          </p>
+          <p>Here's some links to help you get started.</p>
           <Gutter />
-          <Link
-            children='Rules'
-            href='https://fantasy.premierleague.com/help/rules'
-          />
-          <Gutter />
-          <Link children='Sign up' href='https://fantasy.premierleague.com/' />
-        </Row>
-      </ContentContainer>
+          <Row>
+            <Link
+              children='Info'
+              href='https://www.premierleague.com/news/1751439'
+            />
+            <Gutter />
+            <Link
+              children='Rules'
+              href='https://fantasy.premierleague.com/help/rules'
+            />
+            <Gutter />
+            <Link
+              children='Sign up'
+              href='https://fantasy.premierleague.com/'
+            />
+          </Row>
+        </ContentContainer>{' '}
+      </AllContentContainer>
     </>
   )
 }
