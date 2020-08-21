@@ -4,12 +4,17 @@ import { ReactComponent as CopyIcon } from './copy-icon.svg'
 
 const LEAGUE_CODE = '8k99z9'
 
+const baseFontSize = 16
+function rem(num: number) {
+  return `${num * baseFontSize}px`
+}
+
 const GlobalStyle = createGlobalStyle`
   body {
-    font-size: 1rem;
+    font-size: ${rem(1)};
     font-family: sans-serif;
     margin: 0;
-    padding-bottom: 1.5rem;
+    padding-bottom: ${rem(1.5)};
   }
 
   html {
@@ -100,14 +105,12 @@ function Banner() {
   )
 }
 
-const buttonHeight = '3rem'
-
 const CodeBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   background-color: #eee;
-  font-size: 1.3rem;
+  font-size: ${rem(1.3)};
   color: #777;
 `
 
@@ -131,8 +134,8 @@ const CodeInput = styled.input`
 
 const CopyButton = styled.button`
   ${normalizeButton};
-  height: 3rem;
-  width: 3rem;
+  height: ${rem(3)};
+  width: ${rem(3)};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,10 +145,10 @@ const CopyButton = styled.button`
 const ContentContainer = styled.div`
   max-width: 600px;
   margin: auto;
-  padding: 1.5rem;
-  font-size: 1rem;
+  padding: ${rem(1.5)};
+  font-size: ${rem(1)};
   ${desktop} {
-    padding: 2rem;
+    padding: ${rem(2)};
   }
 `
 
@@ -156,11 +159,11 @@ const AllContentContainer = styled(ContentContainer)`
 
 const Gutter = styled.div`
   ${desktop} {
-    width: 0.8rem;
-    height: 0.8rem;
+    width: ${rem(0.8)};
+    height: ${rem(0.8)};
   }
-  width: 0.6rem;
-  height: 0.6rem;
+  width: ${rem(0.6)};
+  height: ${rem(0.6)};
 `
 
 const Row = styled.div`
@@ -170,8 +173,8 @@ const Row = styled.div`
 
 const Button = styled.button<{ color?: string }>`
   ${normalizeButton};
-  height: 3rem;
-  line-height: 3rem;
+  height: ${rem(3)};
+  line-height: ${rem(3)};
   flex: 1;
   text-transform: uppercase;
   text-align: center;
@@ -181,28 +184,28 @@ const Button = styled.button<{ color?: string }>`
   font-family: IBM Plex Mono, monospace;
   letter-spacing: 0.05em;
   ${desktop} {
-    font-size: 1.2rem;
+    font-size: ${rem(1.2)};
   }
 `
 
 const TitleText = styled.div`
   font-family: IBM Plex Mono, monospace;
   font-weight: 500;
-  font-size: 2rem;
+  font-size: ${rem(2)};
   text-align: justify;
   text-align-last: justify;
   ${desktop} {
-    font-size: 3rem;
+    font-size: ${rem(3)};
   }
 `
 
 const SubTitleText = styled.div`
-  font-size: 1.1rem;
+  font-size: ${rem(1.1)};
   white-space: pre;
   text-align: center;
 
   ${desktop} {
-    font-size: 1.4rem;
+    font-size: ${rem(1.4)};
   }
 `
 
