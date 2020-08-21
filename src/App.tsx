@@ -1,6 +1,5 @@
 import React, { AnchorHTMLAttributes, DOMAttributes } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-
 import { ReactComponent as CopyIcon } from './copy-icon.svg'
 
 const LEAGUE_CODE = '8k99z9'
@@ -230,8 +229,9 @@ function App() {
         </ContentContainer>
         <ContentContainer>
           <p>Your favourite FPL league is back for 20/21!</p>
-          <p>Entry fee is £10.</p>
-          <p>Prizepool distribution is TBC.</p>
+          <p>Entry fee is £10. Prizepool distribution is TBC.</p>
+          <p>Use the code or auto-join button below to get in.</p>
+          <Gutter />
           <CodeBox>
             <CodeText children={LEAGUE_CODE} />
             <CodeInput
