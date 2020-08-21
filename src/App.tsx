@@ -23,7 +23,8 @@ const GlobalStyle = createGlobalStyle`
 
   *, *:before, *:after {
     box-sizing: border-box;
-
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
   }
 
   p:first-child {
