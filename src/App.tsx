@@ -37,6 +37,8 @@ export const normalizeButton = `
   padding: 0;
   color: inherit;
   cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
 `
 
 export const normalizeInput = `
