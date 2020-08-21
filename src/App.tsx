@@ -172,7 +172,33 @@ const Row = styled.div`
   flex-direction: row;
 `
 
-const Button = styled.button<{ color?: string }>`
+const NewButton = styled.button<{ color?: string }>`
+  ${normalizeButton};
+  height: ${rem(3)};
+  flex: 1;
+  text-transform: uppercase;
+  text-align: center;
+  color: white;
+  background-color: ${(props) => props.color || 'black'};
+  text-decoration: none;
+  font-family: IBM Plex Mono, monospace;
+  letter-spacing: 0.05em;
+  font-size: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:before {
+    letter-spacing: 0.05em;
+    line-height: ${rem(3)};
+    font-size: ${rem(1)};
+    content: "${(props) => String(props.children)}";
+    ${desktop} {
+      font-size: ${rem(1.2)};
+    }
+  }
+`
+
+const OldButton = styled.button<{ color?: string }>`
   ${normalizeButton};
   height: ${rem(3)};
   line-height: ${rem(3)};
@@ -188,6 +214,8 @@ const Button = styled.button<{ color?: string }>`
     font-size: ${rem(1.2)};
   }
 `
+
+const Button = [NewButton, OldButton][0]
 
 const TitleText = styled.div`
   font-family: IBM Plex Mono, monospace;
