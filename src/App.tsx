@@ -191,7 +191,7 @@ const NewButton = styled.button<{ color?: string }>`
     letter-spacing: 0.05em;
     line-height: ${rem(3)};
     font-size: ${rem(1)};
-    content: "${(props) => String(props.children)}";
+    content: '${(props) => String(props.children)}';
     ${desktop} {
       font-size: ${rem(1.2)};
     }
@@ -263,7 +263,7 @@ function App() {
         </ContentContainer>
         <ContentContainer>
           <p>Your favourite FPL league is back for 20/21!</p>
-          <p>Entry fee is £10. Prizepool distribution is TBC.</p>
+          <p>Entry fee is £10. Prizepool distribution is 🥇50% 🥈30% 🥉20%.</p>
           <p>Use the code or auto-join button below to get in.</p>
           <Gutter />
           <CodeBox>
