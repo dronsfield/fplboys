@@ -2,7 +2,8 @@
 date: "2020-11-24"
 season: 2021
 gw: 9
-author: C. Gordon
+author: Callum Gordon
+description: "The China plague forced some difficult decisions this game week for most teams, with some exceptions..."
 ---
 
 The China plague forced some difficult decisions this game week for most teams, with some exceptions:

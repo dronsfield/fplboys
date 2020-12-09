@@ -2,7 +2,8 @@
 date: "2020-12-08"
 season: 2021
 gw: 11
-author: B. Odart
+author: Ben Odart
+description: After another eventful week in one of the stranger years the premier league has seen, the decision of ‘switch him out or hope that it’s a short two weeks and his lungs aren’t fecked’ really is becoming a defining tale of the season. 
 ---
 
 After another eventful week in one of the stranger years the premier league has seen, the decision of ‘switch him out or hope that it’s a short two weeks and his lungs aren’t fecked’ really is becoming a defining tale of the season. 

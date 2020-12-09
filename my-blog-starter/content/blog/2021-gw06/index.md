@@ -2,7 +2,8 @@
 date: "2020-10-30"
 season: 2021
 gw: 6
-author: A. Pugh
+author: Andy Pugh
+description: After a crazy start to the season, things normalised to an extent with a relatively calm weekend in the PL. Nonetheless, in FPL things continue to heat up as we move deeper into the season.
 ---
 
 After a crazy start to the season, things normalised to an extent with a relatively calm weekend in the PL. Nonetheless, in FPL things continue to heat up as we move deeper into the season.

@@ -2,7 +2,8 @@
 date: "2020-12-03"
 season: 2021
 gw: 10
-author: W. Jones
+author: Will Jones
+description: The Queen’s Gambit has taken the nation by storm, and now it seems, most of the premier league itself. Let me explain.
 ---
 
 The Queen’s Gambit has taken the nation by storm, and now it seems, most of the premier league itself. Let me explain.
