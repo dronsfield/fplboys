@@ -10,7 +10,7 @@ export const colors = {
 
 export const mobileMq = `@media (max-width: 600px)`
 
-export const rootFontSize = 16
+export const rootFontSize = 14
 export function rem(num: number) {
   return `${num * rootFontSize}px`
 }

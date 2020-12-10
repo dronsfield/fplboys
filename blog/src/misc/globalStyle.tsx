@@ -6,6 +6,8 @@ export const GlobalStyle = createGlobalStyle`
   :after,
   :before {
     box-sizing: border-box;
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
   }
 
   html {
@@ -16,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    font-size: ${rem(1)};
     font-family: ${fonts.sans};
     color: #2e353f;
   }
