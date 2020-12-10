@@ -12,7 +12,7 @@ const ListItem = styled.li`
 `
 
 const BlogIndex = (props: PageProps) => {
-  const { data } = props
+  const { data, location } = props
   const siteTitle = data?.site.siteMetadata?.title
   const posts = data?.allMarkdownRemark.nodes
 

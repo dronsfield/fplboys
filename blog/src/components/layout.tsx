@@ -10,7 +10,7 @@ const Header = styled.header`
 
 const Heading = styled.h1<{ isRoot: boolean }>`
   font-family: ${fonts.sans};
-  font-size: ${props => rem(props.isRoot ? 2.5 : 1.5)};
+  font-size: ${props => rem(props.isRoot ? 2.2 : 1.5)};
   ${mobileMq} {
     font-size: ${rem(1.5)};
   }
@@ -46,7 +46,7 @@ const TheHeading: React.FC<{ isRoot: boolean }> = props => {
   )
 }
 
-const Layout = ({ location, title, children }) => {
+const Layout = ({ location, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
 
   const heading = <TheHeading isRoot={location.pathname === rootPath} />
