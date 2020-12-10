@@ -1,30 +1,43 @@
 import { Link } from "gatsby"
 import React from "react"
 import styled from "styled-components"
-import fonts from "../misc/fonts"
+import { fonts, mobileMq, rem } from "../misc"
+import { GlobalStyle } from "../misc/globalStyle"
 
 const Header = styled.header`
-  margin-bottom: 50px;
+  margin-bottom: ${rem(2.5)};
 `
 
-const Heading = styled.h1<{ baseSize: number }>`
+const Heading = styled.h1<{ isRoot: boolean }>`
   font-family: ${fonts.sans};
-  font-size: ${props => props.baseSize}px;
-
-  & > div:first-child {
-    font-size: 1em;
+  font-size: ${props => rem(props.isRoot ? 2.5 : 1.5)};
+  ${mobileMq} {
+    font-size: ${rem(1.5)};
   }
 
   & > div:last-child {
     font-size: 1.6em;
+    @media (max-width: 390px) {
+      font-size: ${rem(2)};
+    }
+  }
+`
+
+const GlobalWrapper = styled.div`
+  margin: 0 auto;
+  max-width: 660px;
+  padding: ${rem(6)} ${rem(3)};
+  ${mobileMq} {
+    padding: ${rem(2.5)} ${rem(1.4)};
   }
 `
 
 const TheHeading: React.FC<{ isRoot: boolean }> = props => {
+  const { isRoot } = props
   return (
     <Header>
       <Link to="/">
-        <Heading baseSize={props.isRoot ? 40 : 24}>
+        <Heading isRoot={isRoot}>
           <div>F P L B O Y S</div>
           <div>Gameweek Reports</div>
         </Heading>
@@ -35,38 +48,20 @@ const TheHeading: React.FC<{ isRoot: boolean }> = props => {
 
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
-  const isRootPath = location.pathname === rootPath
-  let header
-
-  if (isRootPath) {
-    header = (
-      <Link to="/">
-        <Heading baseSize={40}>
-          <div>F P L B O Y S</div>
-          <div>Gameweek Reports</div>
-        </Heading>
-      </Link>
-    )
-  } else {
-    header = (
-      <Link className="header-link-home" to="/">
-        {title}
-      </Link>
-    )
-  }
 
   const heading = <TheHeading isRoot={location.pathname === rootPath} />
 
   return (
-    <div className="global-wrapper" data-is-root-path={isRootPath}>
+    <GlobalWrapper>
+      <GlobalStyle />
       {heading}
       <main>{children}</main>
-      <footer>
+      {/* <footer>
         © {new Date().getFullYear()}, Built with
         {` `}
         <a href="https://www.gatsbyjs.com">Gatsby</a>
-      </footer>
-    </div>
+      </footer> */}
+    </GlobalWrapper>
   )
 }
 

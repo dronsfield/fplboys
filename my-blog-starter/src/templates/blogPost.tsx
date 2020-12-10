@@ -1,8 +1,33 @@
 import { graphql, Link } from "gatsby"
 import React from "react"
-import Bio from "../components/bio"
+import styled from "styled-components"
 import Layout from "../components/layout"
+import PostHeader from "../components/postHeader"
 import SEO from "../components/seo"
+import { colors, fonts } from "../misc"
+
+const AdjacentLink = styled(Link)`
+  color: ${colors.purple};
+  font-family: ${fonts.sans};
+  font-weight: bold;
+`
+
+const Arrow = styled.div<{ direction: "left" | "right" }>`
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  vertical-align: unset;
+  ${props => {
+    const styleDirection = props.direction === "left" ? "right" : "left"
+    return `
+  border: 0em solid transparent;
+  border-${styleDirection}-color: currentColor;
+  border-${styleDirection}-width: 0.6em;
+  border-top-width: 0.3em;
+  border-bottom-width: 0.3em;
+  margin-${styleDirection}: 0.2em;`
+  }}
+`
 
 const BlogPostTemplate = ({ data, location }) => {
   const post = data.markdownRemark
@@ -22,13 +47,13 @@ const BlogPostTemplate = ({ data, location }) => {
       >
         <header>
           <h1 itemProp="headline">{post.frontmatter.title}</h1>
-          <p>{post.frontmatter.date}</p>
+          <PostHeader frontmatter={post.frontmatter} />
+          {/* <p>{post.frontmatter.date}</p> */}
         </header>
         <section
           dangerouslySetInnerHTML={{ __html: post.html }}
           itemProp="articleBody"
         />
-        <hr />
       </article>
       <nav className="blog-post-nav">
         <ul
@@ -42,16 +67,16 @@ const BlogPostTemplate = ({ data, location }) => {
         >
           <li>
             {previous && (
-              <Link to={previous.fields.slug} rel="prev">
-                ← {previous.frontmatter.title}
-              </Link>
+              <AdjacentLink to={previous.fields.slug} rel="prev">
+                <Arrow direction="left" /> GW{previous.frontmatter.gw}
+              </AdjacentLink>
             )}
           </li>
           <li>
             {next && (
-              <Link to={next.fields.slug} rel="next">
-                {next.frontmatter.title} →
-              </Link>
+              <AdjacentLink to={next.fields.slug} rel="next">
+                GW{next.frontmatter.gw} <Arrow direction="right" />
+              </AdjacentLink>
             )}
           </li>
         </ul>
@@ -78,7 +103,6 @@ export const pageQuery = graphql`
       excerpt(pruneLength: 160)
       html
       frontmatter {
-        title
         date(formatString: "MMMM DD, YYYY")
         description
         author
@@ -91,7 +115,7 @@ export const pageQuery = graphql`
         slug
       }
       frontmatter {
-        title
+        gw
       }
     }
     next: markdownRemark(id: { eq: $nextPostId }) {
@@ -99,7 +123,7 @@ export const pageQuery = graphql`
         slug
       }
       frontmatter {
-        title
+        gw
       }
     }
   }
