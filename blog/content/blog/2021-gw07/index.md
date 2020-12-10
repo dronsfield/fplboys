@@ -3,7 +3,7 @@ date: "2020-11-03"
 season: 2021
 gw: 7
 author: Oscar Koronka
-description: In a bumper week of FPL action that saw some significant movement in the table, Bobby "Quick Corners" Johnson reclaimed top spot, not suffering from Graham Potters decision to 'just chuck the kid in against Kane and Son'
+description: In a bumper week of FPL action that saw some significant movement in the table, Bobby "Quick Corners" Johnson reclaimed top spot, not suffering from Graham Potters decision to 'just chuck the kid in against Kane and Son'...
 ---
 
 In a bumper week of FPL action that saw some significant movement in the table, Bobby "Quick Corners" Johnson reclaimed top spot, not suffering from Graham Potters decision to 'just chuck the kid in against Kane and Son' sacking fan favourite Walton off in the process.
