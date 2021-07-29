@@ -42,7 +42,7 @@ const PostHeader: React.FC<{
   const title = `Gameweek ${gw}`
   return (
     <header>
-      <PostLink to={slug} itemProp="url" className={className}>
+      <PostLink to={"/blog" + slug} itemProp="url" className={className}>
         <Title itemProp="headline" children={title} />
         <Author itemProp="author" children={author} />
       </PostLink>

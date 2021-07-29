@@ -36,7 +36,7 @@ const TheHeading: React.FC<{ isRoot: boolean }> = props => {
   const { isRoot } = props
   return (
     <Header>
-      <Link to="/">
+      <Link to="/blog">
         <Heading isRoot={isRoot}>
           <div>F P L B O Y S</div>
           <div>Gameweek Reports</div>
