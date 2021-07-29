@@ -23,8 +23,6 @@ const players: Player[] = new Array(numberOfPlayers).fill(0).map((_, index) => {
   return { name, fplId, buyIn, points }
 })
 
-console.log(JSON.stringify(players, null, 2))
-
 const Container = styled.div`
   font-family: monospace;
   font-size: 18px;
@@ -50,7 +48,6 @@ const PRIZE_DISTRIBUTIONS = {
   2: [0.625, 0.375],
   3: [0.5, 0.3, 0.2],
 }
-console.log({ PRIZE_DISTRIBUTIONS })
 
 function calculatePrizes(players: Player[]) {
   const playersById: { [id: string]: Player } = {}
@@ -70,7 +67,6 @@ function calculatePrizes(players: Player[]) {
 
   buyIns.forEach((buyIn, index) => {
     const higherBuyIns = buyIns.slice(0, index)
-    console.log({ buyIn, higherBuyIns })
     let pot: Player[] = []
     ;[buyIn, ...higherBuyIns].forEach(someBuyIn => {
       pot.push(...buyInPlayers[someBuyIn])
@@ -78,14 +74,11 @@ function calculatePrizes(players: Player[]) {
     potPlayers[buyIn] = pot
   })
 
-  console.log({ potPlayers })
-
   let pots: { [k: number]: Pot } = mapValues(potPlayers, (value, key) => {
     const buyIn = Number(key)
     const players = value
     const buyInIndex = buyIns.indexOf(buyIn)
     if (buyInIndex < 0) {
-      console.log({ buyIn, buyIns, buyInIndex })
       throw new Error("invalid buyIn index")
     }
     const lowerBuyInIndex = buyInIndex + 1
@@ -93,7 +86,6 @@ function calculatePrizes(players: Player[]) {
       lowerBuyInIndex <= buyIns.length - 1
         ? buyIn - buyIns[lowerBuyInIndex]
         : buyIn
-    console.log({ lowerBuyInIndex, prizePerPlayer, buyIn, buyIns })
     return {
       buyIn,
       totalPrize: prizePerPlayer * players.length,
@@ -105,7 +97,6 @@ function calculatePrizes(players: Player[]) {
     const winners = sortBy(pot.players, "points", true).slice(0, 3)
     if (!winners.length) return []
     const distributionIndex = Math.min(winners.length, 3)
-    console.log({ PRIZE_DISTRIBUTIONS, distributionIndex })
     const distribution = PRIZE_DISTRIBUTIONS[distributionIndex]
     return winners.map((winner, index) => {
       const prizeValue = distribution[index] * pot.totalPrize
@@ -134,8 +125,6 @@ function calculatePrizes(players: Player[]) {
     })
   })
   prizes = sortBy(prizes, "value", true)
-
-  console.log({ prizes })
 
   return { potPlayers, totalPrize, buyIns, pots, prizes }
 }
