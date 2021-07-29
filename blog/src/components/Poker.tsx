@@ -1,3 +1,4 @@
+import { Field, Form, Formik } from "formik"
 import React from "react"
 import styled from "styled-components"
 import mapValues from "../util/mapValues"
@@ -11,17 +12,18 @@ interface Player {
   points: number
 }
 
-const buyIns = [5, 10, 20, 40]
-
 const numberOfPlayers = 16
-const players: Player[] = new Array(numberOfPlayers).fill(0).map((_, index) => {
-  const letter = String.fromCharCode(65 + index)
-  const name = new Array(5).fill(letter).join("").toLowerCase()
-  const fplId = name
-  const buyIn = buyIns[Math.floor(Math.random() * 3.99)]
-  const points = 10 * (numberOfPlayers - index)
-  return { name, fplId, buyIn, points }
-})
+const randomPlayers: Player[] = new Array(numberOfPlayers)
+  .fill(0)
+  .map((_, index) => {
+    const buyIns = [5, 10, 20, 40]
+    const letter = String.fromCharCode(65 + index)
+    const name = new Array(5).fill(letter).join("").toLowerCase()
+    const fplId = name
+    const buyIn = buyIns[Math.floor(Math.random() * 3.99)]
+    const points = 10 * (numberOfPlayers - index)
+    return { name, fplId, buyIn, points }
+  })
 
 const Container = styled.div`
   font-family: monospace;
@@ -130,7 +132,10 @@ function calculatePrizes(players: Player[]) {
 }
 
 const Poker: React.FC<{}> = props => {
+  const [players, setPlayers] = React.useState(randomPlayers)
+
   const prizeInfo = React.useMemo(() => {
+    console.log("prizeInfo memo")
     return calculatePrizes(players)
   }, [players])
 
@@ -139,16 +144,52 @@ const Poker: React.FC<{}> = props => {
   return (
     <Container>
       <h2>Poker</h2>
-      <ul>
-        {players.map(player => {
-          const { name, fplId, buyIn, points } = player
-          return (
-            <ListItem key={fplId}>
-              {name}, £{buyIn}, {points}pts
+      {/* <Formik
+        initialValues={players}
+        onSubmit={values => {
+          setPlayers(values)
+        }}
+      >
+        <Form>
+          <Field id="hello" />
+        </Form>
+      </Formik> */}
+      <Formik
+        initialValues={players}
+        onSubmit={values => {
+          console.log({ values })
+          const newPlayers = values.map(player => {
+            return {
+              ...player,
+              buyIn: Number(player.buyIn),
+              points: Number(player.points),
+            }
+          })
+          setPlayers(newPlayers)
+        }}
+      >
+        <Form>
+          <ul>
+            <ListItem>
+              <Field disabled value="Name" />
+              <Field disabled value="Buy-in (£)" />
+              <Field disabled value="Points" />
             </ListItem>
-          )
-        })}
-      </ul>
+            {players.map((player, index) => {
+              const { name, fplId, buyIn, points } = player
+              return (
+                <ListItem key={fplId}>
+                  <Field id={`${index}.name`} name={`${index}.name`} />
+                  <Field id={`${index}.buyIn`} name={`${index}.buyIn`} />
+                  <Field id={`${index}.points`} name={`${index}.points`} />
+                </ListItem>
+              )
+            })}
+          </ul>
+          <button type="submit">Recalculate</button>
+        </Form>
+      </Formik>
+
       <Spacer height={40} />
       <div>
         {buyIns.map(buyIn => {
