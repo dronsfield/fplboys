@@ -1,9 +1,9 @@
 import React from "react"
-import OldIntro from "../components/oldIntro"
+import Poker from "../components/Poker"
 
 const Home: React.FC<{}> = props => {
   // return <div>xd</div>
-  return <OldIntro />
+  return <Poker />
 }
 
 export default Home
