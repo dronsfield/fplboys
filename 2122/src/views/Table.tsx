@@ -122,7 +122,7 @@ const StyledForm = styled(Form)`
 
 const Table: React.FC<{}> = (props) => {
   const {
-    prizeCalculation: { players, buyIns },
+    prizeCalculation: { players },
     setPlayers
   } = useLeagueContext()
 
