@@ -161,7 +161,11 @@ const Table: React.FC<{}> = (props) => {
       window.alert("Invalid name")
       return
     }
-    if (!buyIn || typeof buyIn !== "number" || !buyIns.includes(buyIn)) {
+    if (
+      !buyIn ||
+      typeof buyIn !== "number" ||
+      ![5, 10, 20, 40].includes(buyIn)
+    ) {
       window.alert("Invalid buy-in")
       return
     }
