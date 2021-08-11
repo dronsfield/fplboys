@@ -5,13 +5,6 @@ import mapValues from "../util/mapValues"
 import { sortBy } from "../util/sortBy"
 import Spacer from "./Spacer"
 
-interface Player {
-  name: string
-  fplId: string
-  buyIn: number
-  points: number
-}
-
 const numberOfPlayers = 16
 const randomPlayers: Player[] = new Array(numberOfPlayers)
   .fill(0)
@@ -33,23 +26,6 @@ const Container = styled.div`
 `
 
 const ListItem = styled.li``
-
-interface Prize {
-  player: Player
-  value: number
-}
-interface Pot {
-  buyIn: number
-  totalPrize: number
-  players: Player[]
-  prizes?: Prize[]
-}
-
-const PRIZE_DISTRIBUTIONS = {
-  1: [1],
-  2: [0.625, 0.375],
-  3: [0.5, 0.3, 0.2],
-}
 
 function calculatePrizes(players: Player[]) {
   const playersById: { [id: string]: Player } = {}

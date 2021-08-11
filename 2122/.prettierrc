@@ -1,0 +1,14 @@
+{
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "jsxSingleQuote": false,
+  "semi": false,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "tabs": true,
+  "trailingComma": "none",
+  "overrides": [
+    { "files": "**/translation.ts", "options": { "printWidth": 1000 } }
+  ]
+}

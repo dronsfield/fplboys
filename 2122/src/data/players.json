@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Josh Dronsfield",
+    "buyIn": 40,
+    "datePaid": "2021-08-08"
+  },
+  {
+    "name": "Rob Johnson",
+    "buyIn": 40,
+    "datePaid": "2021-08-09"
+  },
+  {
+    "name": "Geoff Garner",
+    "buyIn": 20,
+    "datePaid": "2021-08-09"
+  },
+  {
+    "name": "Andy Pugh",
+    "buyIn": 20,
+    "datePaid": "2021-08-10"
+  },
+  {
+    "name": "Mark Pugh",
+    "buyIn": 40,
+    "datePaid": "2021-08-10"
+  },
+  {
+    "name": "Dan Voller",
+    "buyIn": 20,
+    "datePaid": "2021-08-11"
+  }
+]
