@@ -1,31 +1,36 @@
 [
   {
-    "name": "Josh Dronsfield",
+    "name": "Josh D",
     "buyIn": 40,
     "datePaid": "2021-08-08"
   },
   {
-    "name": "Rob Johnson",
+    "name": "Rob J",
     "buyIn": 40,
     "datePaid": "2021-08-09"
   },
   {
-    "name": "Geoff Garner",
+    "name": "Geoff G",
     "buyIn": 20,
     "datePaid": "2021-08-09"
   },
   {
-    "name": "Andy Pugh",
+    "name": "Andy P",
     "buyIn": 20,
     "datePaid": "2021-08-10"
   },
   {
-    "name": "Mark Pugh",
+    "name": "Mark P",
     "buyIn": 40,
     "datePaid": "2021-08-10"
   },
   {
-    "name": "Dan Voller",
+    "name": "Dan V",
+    "buyIn": 20,
+    "datePaid": "2021-08-11"
+  },
+  {
+    "name": "Matt V",
     "buyIn": 20,
     "datePaid": "2021-08-11"
   }

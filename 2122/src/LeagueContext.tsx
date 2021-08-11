@@ -5,6 +5,7 @@ import {
   Player,
   PrizeCalculation
 } from "./util/calculatePrizes"
+import { randomKey } from "./util/randomKey"
 import { sortBy } from "./util/sortBy"
 
 interface LeagueContextType {
@@ -27,16 +28,16 @@ const defaultValue: LeagueContextType = {
 export const LeagueContext =
   React.createContext<LeagueContextType>(defaultValue)
 
-const defaultPlayers: Player[] = sortBy(playersData, "buyIn", true, {
-  secondaryProp: "name"
-}).map((player, index) => {
-  return {
-    name: player.name || "",
-    fplId: player.name || "",
-    buyIn: player.buyIn,
-    placement: index
+const defaultPlayers: Player[] = sortBy(playersData, "name").map(
+  (player, index) => {
+    return {
+      name: player.name || "",
+      fplId: randomKey() + (player.name || ""),
+      buyIn: player.buyIn,
+      placement: index
+    }
   }
-})
+)
 
 export const LeagueContextProvider: React.FC<{}> = (props) => {
   const { children } = props
@@ -46,7 +47,6 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
   }, [players])
 
   const contextValue = { setPlayers, prizeCalculation }
-  console.log(contextValue)
 
   return <LeagueContext.Provider value={contextValue} children={children} />
 }

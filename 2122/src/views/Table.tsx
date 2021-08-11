@@ -1,8 +1,12 @@
+import { Field, Form, Formik } from "formik"
 import React from "react"
 import Section from "src/components/Section"
+import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
 import colors from "src/style/colors"
 import { normalizeButton } from "src/style/mixins"
+import { Player } from "src/util/calculatePrizes"
+import { randomKey } from "src/util/randomKey"
 import styled from "styled-components"
 
 const List = styled.ol`
@@ -59,14 +63,25 @@ const DesktopOnlyMoneySpan = styled(MoneySpan)`
   }
 `
 
-function formatProfit(profit: number): { children: string; color?: string } {
-  const absValue = Math.abs(profit)
-  if (profit > 0) {
-    return { children: `+£${absValue}`, color: "green" }
-  } else if (profit === 0) {
-    return { children: `±£0` }
+function formatMoney(
+  value: number,
+  showsProfit?: boolean
+): { children: string; color?: string } {
+  const absValue = Math.abs(value)
+  const absText = Number.isInteger(absValue)
+    ? absValue.toFixed(0)
+    : absValue.toFixed(2)
+  if (value > 0) {
+    const prefix = showsProfit ? "+" : ""
+    return {
+      children: `${prefix}£${absText}`,
+      color: showsProfit ? "green" : undefined
+    }
+  } else if (value === 0) {
+    const prefix = showsProfit ? "±" : ""
+    return { children: `${prefix}£${absText}`, color: "#bbb" }
   } else {
-    return { children: `-£${absValue}`, color: "#bbb" }
+    return { children: `-£${absText}`, color: "#bbb" }
   }
 }
 
@@ -96,11 +111,18 @@ const PlacementModifiers = (props: {
   )
 }
 
-const Table: React.FC<{}> = (props) => {
-  const { ...foo } = props
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: row;
 
+  & input {
+    min-width: 0;
+  }
+`
+
+const Table: React.FC<{}> = (props) => {
   const {
-    prizeCalculation: { players },
+    prizeCalculation: { players, buyIns },
     setPlayers
   } = useLeagueContext()
 
@@ -132,8 +154,53 @@ const Table: React.FC<{}> = (props) => {
     return { up: getModifierHandler(true), down: getModifierHandler(false) }
   }
 
+  const addPlayer = (player: { name: string; buyIn: number }) => {
+    const { name, buyIn } = player
+    if (typeof name !== "string" || name.length < 1) {
+      window.alert("Invalid name")
+      return
+    }
+    if (typeof buyIn !== "number" || !buyIns.includes(buyIn)) {
+      window.alert("Invalid buy-in")
+      return
+    }
+    const formattedPlayer: Player = {
+      name: name,
+      buyIn: buyIn,
+      fplId: randomKey() + name,
+      placement: 0
+    }
+    setPlayers((originalPlayers) => {
+      const players = [...originalPlayers]
+      players.splice(0, 0, formattedPlayer)
+      return players.map((player, index) => {
+        return { ...player, placement: index }
+      })
+    })
+  }
+
   return (
     <Section>
+      <div>
+        Add yourself in and/or change placement order to see what you could win
+        with different buy-ins.
+      </div>
+      <div>
+        NB: The league is likely to expand to be a lot bigger than this before
+        the season starts.
+      </div>
+      <Spacer height={16} />
+      <Formik
+        initialValues={{ name: "", buyIn: undefined } as any}
+        onSubmit={addPlayer}
+      >
+        <StyledForm>
+          <Field type="text" placeholder="Name" name="name" />
+          <Field type="number" placeholder="£ Buy-in" name="buyIn" />
+          <button type="submit" children="Add" />
+        </StyledForm>
+      </Formik>
+      <Spacer height={16} />
       <List>
         <Header>
           <PlacementModifiers />
@@ -145,18 +212,15 @@ const Table: React.FC<{}> = (props) => {
         </Header>
         {players.map((player) => {
           return (
-            <Item>
+            <Item key={player.fplId}>
               <PlacementModifiers
                 modifierHandlers={getModifierHandlers(player.fplId)}
               />
               <PlacementSpan children={`#${player.placement + 1}`} />
               <PlayerSpan children={player.name} />
-              <MoneySpan children={`£${player.buyIn}`} />
-              <DesktopOnlyMoneySpan
-                children={`£${player.prizeValue}`}
-                color={player.prizeValue ? undefined : "#bbb"}
-              />
-              <MoneySpan {...formatProfit(player.profit)} />
+              <MoneySpan {...formatMoney(player.buyIn)} />
+              <DesktopOnlyMoneySpan {...formatMoney(player.prizeValue)} />
+              <MoneySpan {...formatMoney(player.profit, true)} />
             </Item>
           )
         })}

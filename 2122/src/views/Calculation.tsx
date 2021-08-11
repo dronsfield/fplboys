@@ -6,19 +6,19 @@ import { useLeagueContext } from "src/LeagueContext"
 const lilSpacer = <Spacer height={5} />
 
 const Calculation: React.FC<{}> = (props) => {
-  const { ...foo } = props
-
   const {
     prizeCalculation: { buyIns, totalPrize, prizes, pots }
   } = useLeagueContext()
 
   return (
     <Section>
+      <h3>Prize calculation breakdown:</h3>
+      {lilSpacer}
       <div>
         {buyIns.map((buyIn) => {
           const { totalPrize, players, prizes } = pots[buyIn]
           return (
-            <div>
+            <div key={buyIn}>
               <strong>£{buyIn} buy-in pot</strong>
               {lilSpacer}
               <div>Total prize: £{totalPrize}</div>
@@ -32,7 +32,7 @@ const Calculation: React.FC<{}> = (props) => {
                 Winners:
                 {prizes?.map((prize, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       #{index + 1}: {prize.player.name}, £{prize.value}
                     </div>
                   )
@@ -45,13 +45,15 @@ const Calculation: React.FC<{}> = (props) => {
         <hr />
         <Spacer height={20} />
         <div>
+          <strong>Overall</strong>
+          {lilSpacer}
           <div>Total prize: £{totalPrize}</div>
           {lilSpacer}
           <div>
             Winners:
             {prizes?.map((prize, index) => {
               return (
-                <div>
+                <div key={index}>
                   {prize.player.name}, £{prize.value}
                 </div>
               )
