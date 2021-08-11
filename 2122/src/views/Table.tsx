@@ -155,12 +155,13 @@ const Table: React.FC<{}> = (props) => {
   }
 
   const addPlayer = (player: { name: string; buyIn: number }) => {
-    const { name, buyIn } = player
+    let { name, buyIn } = player
+    buyIn = Number(buyIn)
     if (typeof name !== "string" || name.length < 1) {
       window.alert("Invalid name")
       return
     }
-    if (typeof buyIn !== "number" || !buyIns.includes(buyIn)) {
+    if (!buyIn || typeof buyIn !== "number" || !buyIns.includes(buyIn)) {
       window.alert("Invalid buy-in")
       return
     }
