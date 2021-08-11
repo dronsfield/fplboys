@@ -38,7 +38,8 @@ export interface PrizeCalculation {
 export const PRIZE_DISTRIBUTIONS: { [k: number]: number[] } = {
   1: [1],
   2: [1, 0],
-  3: [0.625, 0.375, 0]
+  3: [0.625, 0.375, 0],
+  4: [0.5, 0.3, 0.2]
 }
 
 function sortPlayers(players: Player[]): Player[] {
@@ -73,7 +74,7 @@ export function calculatePrizes(players: Player[]): PrizeCalculation {
   function calculatePrizesFromPot(pot: Omit<Pot, "prizes">): Prize[] {
     const winners = sortPlayers(pot.players).slice(0, 3)
     if (!winners.length) return []
-    const distributionIndex = Math.min(winners.length, 3)
+    const distributionIndex = Math.min(pot.players.length, 4)
     const distribution = PRIZE_DISTRIBUTIONS[distributionIndex]
     return winners.map((winner, index) => {
       const prizeValue = distribution[index] * pot.totalPrize
@@ -100,10 +101,6 @@ export function calculatePrizes(players: Player[]): PrizeCalculation {
     }
     return { ...pot, prizes: calculatePrizesFromPot(pot) }
   })
-
-  // pots = mapValues(pots, (pot) => {
-  //   return { ...pot, prizes: calculatePrizesFromPot(pot) }
-  // })
 
   const totalPrizePerPlayer: { [id: string]: number } = {}
   Object.values(pots).forEach((pot) => {

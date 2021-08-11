@@ -58,7 +58,7 @@ function formatProfit(profit: number): { children: string; color?: string } {
   } else if (profit === 0) {
     return { children: `±£0` }
   } else {
-    return { children: `-£${absValue}`, color: "red" }
+    return { children: `-£${absValue}`, color: "#bbb" }
   }
 }
 

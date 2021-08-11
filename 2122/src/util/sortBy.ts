@@ -1,5 +1,5 @@
 function isEmpty(value: any) {
-  return Boolean(!value && value !== false)
+  return Boolean(!value && value !== false && value !== 0)
 }
 
 function compareFactory<T>(opts: {
