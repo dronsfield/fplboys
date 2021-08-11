@@ -3,6 +3,8 @@ import Section from "src/components/Section"
 import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
 
+const lilSpacer = <Spacer height={5} />
+
 const Calculation: React.FC<{}> = (props) => {
   const { ...foo } = props
 
@@ -17,12 +19,15 @@ const Calculation: React.FC<{}> = (props) => {
           const { totalPrize, players, prizes } = pots[buyIn]
           return (
             <div>
-              <div>Buy-in: £{buyIn}</div>
+              <strong>£{buyIn} buy-in pot</strong>
+              {lilSpacer}
               <div>Total prize: £{totalPrize}</div>
+              {lilSpacer}
               <div>
                 Players ({players.length}):{" "}
                 {players.map((player) => player.name).join(", ")}
               </div>
+              {lilSpacer}
               <div>
                 Winners:
                 {prizes?.map((prize, index) => {
@@ -41,6 +46,7 @@ const Calculation: React.FC<{}> = (props) => {
         <Spacer height={20} />
         <div>
           <div>Total prize: £{totalPrize}</div>
+          {lilSpacer}
           <div>
             Winners:
             {prizes?.map((prize, index) => {

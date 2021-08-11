@@ -27,7 +27,7 @@ const defaultValue: LeagueContextType = {
 export const LeagueContext =
   React.createContext<LeagueContextType>(defaultValue)
 
-const defaultPlayers: Player[] = sortBy(playersData, "buyIn", false, {
+const defaultPlayers: Player[] = sortBy(playersData, "buyIn", true, {
   secondaryProp: "name"
 }).map((player, index) => {
   return {
