@@ -43,5 +43,10 @@
     "name": "Ben O",
     "buyIn": 40,
     "datePaid": "2021-08-11"
+  },
+  {
+    "name": "Callum  G",
+    "buyIn": 10,
+    "datePaid": ""
   }
 ]
