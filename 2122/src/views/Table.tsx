@@ -187,12 +187,12 @@ const Table: React.FC<{}> = (props) => {
   return (
     <Section>
       <div>
-        Add yourself in and/or change placement order to see what you could win
-        with different buy-ins.
+        You can change placement order and/or add people in to see what you
+        could win with different buy-ins.
       </div>
       <div>
-        NB: The league is likely to expand to be a lot bigger than this before
-        the season starts.
+        This form isn't an actual submission to the league! It's just to play
+        around and see how the prize system works.
       </div>
       <Spacer height={16} />
       <Formik
