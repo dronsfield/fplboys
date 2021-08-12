@@ -46,7 +46,12 @@
   },
   {
     "name": "Callum  G",
-    "buyIn": 10,
+    "buyIn": 5,
+    "datePaid": ""
+  },
+  {
+    "name": "Paul  C",
+    "buyIn": 20,
     "datePaid": ""
   }
 ]
