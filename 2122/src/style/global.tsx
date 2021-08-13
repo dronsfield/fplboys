@@ -15,7 +15,10 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     color: ${colors.text};
     font-family: sans-serif;
-    font-size: 14px;
+    font-size: 13px;
+    @media (min-width: 500px) {
+      font-size: 15px;
+    }
   }
 
   #root {

@@ -47,11 +47,21 @@
   {
     "name": "Callum  G",
     "buyIn": 5,
-    "datePaid": ""
+    "datePaid": "2021-08-11"
   },
   {
     "name": "Paul  C",
     "buyIn": 20,
+    "datePaid": ""
+  },
+  {
+    "name": "Oscar  K",
+    "buyIn": 20,
+    "datePaid": ""
+  },
+  {
+    "name": "Max  CC",
+    "buyIn": 5,
     "datePaid": ""
   }
 ]

@@ -21,7 +21,7 @@ const Item = styled.li`
   align-items: center;
   background-color: white;
   border: 1px solid ${colors.border};
-  padding: 2px 5px;
+  padding: 8px 8px;
   border-top-width: 0;
 
   &:first-child {
@@ -52,7 +52,10 @@ const PlayerSpan = styled.span`
 `
 
 const MoneySpan = styled.span<{ color?: string }>`
-  width: 60px;
+  width: 55px;
+  @media (min-width: 500px) {
+    width: 65px;
+  }
   ${(p) =>
     p.color ? `color: ${p.color};` : ``}// border-left: 1px solid black;
 `
@@ -86,15 +89,16 @@ function formatMoney(
 }
 
 const PlacementModifiersContainer = styled.div`
-  width: 30px;
+  width: 32px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
 `
 const PlacementModifierButton = styled.button`
   ${normalizeButton};
-  width: 100%;
-  font-size: 8px;
+  font-size: 11px;
+  margin-right: 2px;
   height: 16px;
 `
 
