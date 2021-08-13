@@ -36,7 +36,7 @@ const Item = styled.li`
 const Header = styled(Item)`
   font-size: 10px;
   text-transform: uppercase;
-  padding: 9px 5px;
+  padding: 8px 8px;
 `
 
 const PlacementSpan = styled.span`
