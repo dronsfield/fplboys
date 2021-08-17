@@ -2,6 +2,7 @@ import React from "react"
 import Section from "src/components/Section"
 import { useLeagueContext } from "src/LeagueContext"
 import colors from "src/style/colors"
+import { normalizeButton } from "src/style/mixins"
 import { formatName } from "src/util/formatName"
 import styled from "styled-components"
 
@@ -88,16 +89,73 @@ function formatMoney(
   }
 }
 
+const RankModifiersContainer = styled.div`
+  width: 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`
+const RankModifierButton = styled.button`
+  ${normalizeButton};
+  font-size: 11px;
+  margin-right: 2px;
+  height: 16px;
+`
+
+const RankModifiers = (props: {
+  modifierHandlers?: { up: () => void; down: () => void }
+}) => {
+  const { modifierHandlers } = props
+  if (!modifierHandlers) return <RankModifiersContainer />
+  return (
+    <RankModifiersContainer>
+      <RankModifierButton children="▲" onClick={modifierHandlers.up} />
+      <RankModifierButton children="▼" onClick={modifierHandlers.down} />
+    </RankModifiersContainer>
+  )
+}
+
 const Table: React.FC<{}> = (props) => {
   const {
-    prizeCalculation: { managers }
+    prizeCalculation: { managers },
+    setManagers
   } = useLeagueContext()
+
+  const getModifierHandlers = (id: number) => {
+    const getModifierHandler = (up?: boolean) => {
+      return () => {
+        setManagers((originalManagers) => {
+          let managers = [...originalManagers]
+          const matchingIndex = managers.findIndex(
+            (manager) => manager.id === id
+          )
+          if (
+            matchingIndex < 0 ||
+            (up && matchingIndex === 0) ||
+            (!up && matchingIndex >= managers.length - 1)
+          ) {
+            return originalManagers
+          } else {
+            const [matchingmanager] = managers.splice(matchingIndex, 1) // remove match from array
+            const newIndex = matchingIndex + (up ? -1 : 1)
+            managers.splice(newIndex, 0, matchingmanager) // add match in new position
+            return managers.map((manager, index) => {
+              return { ...manager, rank: index + 1 }
+            })
+          }
+        })
+      }
+    }
+    return { up: getModifierHandler(true), down: getModifierHandler(false) }
+  }
 
   if (managers && managers.length) {
     return (
       <Section>
         <List>
           <Header>
+            <RankModifiers />
             <RankSpan children="" />
             <ManagerSpan children="Name" />
             <PointsSpan children="Points" />
@@ -108,6 +166,9 @@ const Table: React.FC<{}> = (props) => {
           {managers.map((manager) => {
             return (
               <Item key={manager.id}>
+                <RankModifiers
+                  modifierHandlers={getModifierHandlers(manager.id)}
+                />
                 <RankSpan children={`#${manager.rank}`} />
                 <ManagerSpan children={formatName(manager.name)} />
                 <PointsSpan children={manager.totalPoints} />
