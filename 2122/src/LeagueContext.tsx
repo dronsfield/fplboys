@@ -1,52 +1,65 @@
 import React, { Dispatch, SetStateAction } from "react"
-import playersData from "src/data/players.json"
+import managersData from "src/data/managers.json"
+import { useGetLeagueQuery } from "./services/api"
 import {
+  BuyInManager,
   calculatePrizes,
-  Player,
   PrizeCalculation
 } from "./util/calculatePrizes"
-import { randomKey } from "./util/randomKey"
-import { sortBy } from "./util/sortBy"
 
 interface LeagueContextType {
-  setPlayers: Dispatch<SetStateAction<Player[]>>
+  setManagers: Dispatch<SetStateAction<BuyInManager[]>>
   prizeCalculation: PrizeCalculation
 }
 
 const defaultValue: LeagueContextType = {
-  setPlayers: () => {},
+  setManagers: () => {},
   prizeCalculation: {
     buyIns: [],
     pots: {},
-    potPlayers: {},
+    potManagers: {},
     totalPrize: 0,
     prizes: [],
-    players: []
+    managers: []
   }
 }
 
 export const LeagueContext =
   React.createContext<LeagueContextType>(defaultValue)
 
-const defaultPlayers: Player[] = sortBy(playersData, "name").map(
-  (player, index) => {
-    return {
-      name: player.name || "",
-      fplId: randomKey() + (player.name || ""),
-      buyIn: player.buyIn,
-      placement: index
-    }
-  }
-)
+const buyInsById: { [id: string]: number } = {}
+managersData.forEach((manager) => {
+  buyInsById[manager.id] = manager.datePaid ? manager.buyIn : 0
+})
 
 export const LeagueContextProvider: React.FC<{}> = (props) => {
   const { children } = props
-  const [players, setPlayers] = React.useState<Player[]>(defaultPlayers)
-  const prizeCalculation = React.useMemo(() => {
-    return calculatePrizes(players)
-  }, [players])
+  const [managers, setManagers] = React.useState<BuyInManager[]>([])
 
-  const contextValue = { setPlayers, prizeCalculation }
+  const prizeCalculation = React.useMemo(() => {
+    return calculatePrizes(managers)
+  }, [managers])
+
+  const { data } = useGetLeagueQuery()
+  React.useEffect(() => {
+    if (data) {
+      const managers = data.managers.map((manager) => {
+        const buyInLookupValue = buyInsById[String(manager.id)]
+        const buyIn = buyInLookupValue || 0
+        if (!buyInLookupValue) {
+          if (buyInLookupValue === 0) {
+            console.log(`${manager.name} still hasn't paid`)
+          } else {
+            console.log(`whomst is ${manager.name} ??`)
+          }
+        }
+        return { ...manager, buyIn }
+      })
+      setManagers(managers)
+    }
+  }, [data])
+
+  const contextValue = { setManagers, prizeCalculation }
 
   return <LeagueContext.Provider value={contextValue} children={children} />
 }

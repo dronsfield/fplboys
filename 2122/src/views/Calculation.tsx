@@ -2,6 +2,7 @@ import React from "react"
 import Section from "src/components/Section"
 import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
+import { formatName } from "src/util/formatName"
 
 const lilSpacer = <Spacer height={5} />
 
@@ -16,7 +17,7 @@ const Calculation: React.FC<{}> = (props) => {
       {lilSpacer}
       <div>
         {buyIns.map((buyIn) => {
-          const { totalPrize, players, prizes } = pots[buyIn]
+          const { totalPrize, managers, prizes } = pots[buyIn]
           return (
             <div key={buyIn}>
               <strong>£{buyIn} buy-in pot</strong>
@@ -24,8 +25,8 @@ const Calculation: React.FC<{}> = (props) => {
               <div>Total prize: £{totalPrize}</div>
               {lilSpacer}
               <div>
-                Players ({players.length}):{" "}
-                {players.map((player) => player.name).join(", ")}
+                Managers ({managers.length}):{" "}
+                {managers.map((manager) => formatName(manager.name)).join(", ")}
               </div>
               {lilSpacer}
               <div>
@@ -33,7 +34,8 @@ const Calculation: React.FC<{}> = (props) => {
                 {prizes?.map((prize, index) => {
                   return (
                     <div key={index}>
-                      #{index + 1}: {prize.player.name}, £{prize.value}
+                      #{index + 1}: {formatName(prize.manager.name)}, £
+                      {prize.value}
                     </div>
                   )
                 })}
@@ -54,7 +56,7 @@ const Calculation: React.FC<{}> = (props) => {
             {prizes?.map((prize, index) => {
               return (
                 <div key={index}>
-                  {prize.player.name}, £{prize.value}
+                  {formatName(prize.manager.name)}, £{prize.value}
                 </div>
               )
             })}

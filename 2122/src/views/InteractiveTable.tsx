@@ -5,10 +5,8 @@ import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
 import colors from "src/style/colors"
 import { normalizeButton } from "src/style/mixins"
-import { Player } from "src/util/calculatePrizes"
-import { randomKey } from "src/util/randomKey"
+import { BuyInManager } from "src/util/calculatePrizes"
 import styled from "styled-components"
-
 const List = styled.ol`
   margin: 0;
   padding: 0;
@@ -39,7 +37,7 @@ const Header = styled(Item)`
   padding: 8px 8px;
 `
 
-const PlacementSpan = styled.span`
+const RankSpan = styled.span`
   display: inline-block;
   width: 30px;
   opacity: 0.5;
@@ -47,7 +45,7 @@ const PlacementSpan = styled.span`
   font-style: italic;
 `
 
-const PlayerSpan = styled.span`
+const ManagerSpan = styled.span`
   flex: 1;
 `
 
@@ -88,30 +86,30 @@ function formatMoney(
   }
 }
 
-const PlacementModifiersContainer = styled.div`
+const RankModifiersContainer = styled.div`
   width: 32px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
 `
-const PlacementModifierButton = styled.button`
+const RankModifierButton = styled.button`
   ${normalizeButton};
   font-size: 11px;
   margin-right: 2px;
   height: 16px;
 `
 
-const PlacementModifiers = (props: {
+const RankModifiers = (props: {
   modifierHandlers?: { up: () => void; down: () => void }
 }) => {
   const { modifierHandlers } = props
-  if (!modifierHandlers) return <PlacementModifiersContainer />
+  if (!modifierHandlers) return <RankModifiersContainer />
   return (
-    <PlacementModifiersContainer>
-      <PlacementModifierButton children="▲" onClick={modifierHandlers.up} />
-      <PlacementModifierButton children="▼" onClick={modifierHandlers.down} />
-    </PlacementModifiersContainer>
+    <RankModifiersContainer>
+      <RankModifierButton children="▲" onClick={modifierHandlers.up} />
+      <RankModifierButton children="▼" onClick={modifierHandlers.down} />
+    </RankModifiersContainer>
   )
 }
 
@@ -126,30 +124,30 @@ const StyledForm = styled(Form)`
 
 const Table: React.FC<{}> = (props) => {
   const {
-    prizeCalculation: { players },
-    setPlayers
+    prizeCalculation: { managers },
+    setManagers
   } = useLeagueContext()
 
-  const getModifierHandlers = (fplId: string) => {
+  const getModifierHandlers = (id: number) => {
     const getModifierHandler = (up?: boolean) => {
       return () => {
-        setPlayers((originalPlayers) => {
-          let players = [...originalPlayers]
-          const matchingIndex = players.findIndex(
-            (player) => player.fplId === fplId
+        setManagers((originalManagers) => {
+          let managers = [...originalManagers]
+          const matchingIndex = managers.findIndex(
+            (manager) => manager.id === id
           )
           if (
             matchingIndex < 0 ||
             (up && matchingIndex === 0) ||
-            (!up && matchingIndex >= players.length - 1)
+            (!up && matchingIndex >= managers.length - 1)
           ) {
-            return originalPlayers
+            return originalManagers
           } else {
-            const [matchingPlayer] = players.splice(matchingIndex, 1) // remove match from array
+            const [matchingmanager] = managers.splice(matchingIndex, 1) // remove match from array
             const newIndex = matchingIndex + (up ? -1 : 1)
-            players.splice(newIndex, 0, matchingPlayer) // add match in new position
-            return players.map((player, index) => {
-              return { ...player, placement: index }
+            managers.splice(newIndex, 0, matchingmanager) // add match in new position
+            return managers.map((manager, index) => {
+              return { ...manager, rank: index }
             })
           }
         })
@@ -158,8 +156,8 @@ const Table: React.FC<{}> = (props) => {
     return { up: getModifierHandler(true), down: getModifierHandler(false) }
   }
 
-  const addPlayer = (player: { name: string; buyIn: number }) => {
-    let { name, buyIn } = player
+  const addmanager = (manager: { name: string; buyIn: number }) => {
+    let { name, buyIn } = manager
     buyIn = Number(buyIn)
     if (typeof name !== "string" || name.length < 1) {
       window.alert("Invalid name")
@@ -173,17 +171,20 @@ const Table: React.FC<{}> = (props) => {
       window.alert("Invalid buy-in")
       return
     }
-    const formattedPlayer: Player = {
+    const formattedmanager: BuyInManager = {
       name: name,
       buyIn: buyIn,
-      fplId: randomKey() + name,
-      placement: 0
+      id: Math.floor(Math.random() * 100000),
+      rank: 0,
+      teamName: name,
+      totalPoints: 0,
+      picks: []
     }
-    setPlayers((originalPlayers) => {
-      const players = [...originalPlayers]
-      players.splice(0, 0, formattedPlayer)
-      return players.map((player, index) => {
-        return { ...player, placement: index }
+    setManagers((originalManagers) => {
+      const managers = [...originalManagers]
+      managers.splice(0, 0, formattedmanager)
+      return managers.map((manager, index) => {
+        return { ...manager, rank: index }
       })
     })
   }
@@ -191,8 +192,8 @@ const Table: React.FC<{}> = (props) => {
   return (
     <Section>
       <div>
-        You can change placement order and/or add people in to see what you
-        could win with different buy-ins.
+        You can change rank order and/or add people in to see what you could win
+        with different buy-ins.
       </div>
       <div>
         This form isn't an actual submission to the league! It's just to play
@@ -201,7 +202,7 @@ const Table: React.FC<{}> = (props) => {
       <Spacer height={16} />
       <Formik
         initialValues={{ name: "", buyIn: undefined } as any}
-        onSubmit={addPlayer}
+        onSubmit={addmanager}
       >
         <StyledForm>
           <Field type="text" placeholder="Name" name="name" />
@@ -212,24 +213,24 @@ const Table: React.FC<{}> = (props) => {
       <Spacer height={16} />
       <List>
         <Header>
-          <PlacementModifiers />
-          <PlacementSpan children="" />
-          <PlayerSpan children="Name" />
+          <RankModifiers />
+          <RankSpan children="" />
+          <ManagerSpan children="Name" />
           <MoneySpan children="Buy-in" />
           <DesktopOnlyMoneySpan children="Prize" />
           <MoneySpan children="Profit" />
         </Header>
-        {players.map((player) => {
+        {managers.map((manager) => {
           return (
-            <Item key={player.fplId}>
-              <PlacementModifiers
-                modifierHandlers={getModifierHandlers(player.fplId)}
+            <Item key={manager.id}>
+              <RankModifiers
+                modifierHandlers={getModifierHandlers(manager.id)}
               />
-              <PlacementSpan children={`#${player.placement + 1}`} />
-              <PlayerSpan children={player.name} />
-              <MoneySpan {...formatMoney(player.buyIn)} />
-              <DesktopOnlyMoneySpan {...formatMoney(player.prizeValue)} />
-              <MoneySpan {...formatMoney(player.profit, true)} />
+              <RankSpan children={`#${manager.rank + 1}`} />
+              <ManagerSpan children={manager.name} />
+              <MoneySpan {...formatMoney(manager.buyIn)} />
+              <DesktopOnlyMoneySpan {...formatMoney(manager.prizeValue)} />
+              <MoneySpan {...formatMoney(manager.profit, true)} />
             </Item>
           )
         })}

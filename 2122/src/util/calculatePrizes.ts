@@ -1,33 +1,31 @@
+import { Manager } from "src/services/api"
 import mapValues from "../util/mapValues"
 import { sortBy } from "../util/sortBy"
 
-export interface Player {
-  name: string
-  fplId: string
+export interface BuyInManager extends Manager {
   buyIn: number
-  placement: number
 }
 export interface Prize {
-  player: Player
+  manager: BuyInManager
   value: number
 }
 export interface Pot {
   buyIn: number
   totalPrize: number
-  players: Player[]
+  managers: BuyInManager[]
   prizes: Prize[]
 }
-export interface PlayerWithPrize extends Player {
+export interface managerWithPrize extends BuyInManager {
   prizeValue: number
   profit: number
 }
 export interface PrizeCalculation {
   buyIns: number[]
   pots: { [buyIn: number]: Pot }
-  potPlayers: { [buyIn: number]: Player[] }
+  potManagers: { [buyIn: number]: BuyInManager[] }
   totalPrize: number
   prizes: Prize[]
-  players: PlayerWithPrize[]
+  managers: managerWithPrize[]
 }
 
 // export const PRIZE_DISTRIBUTIONS: { [k: number]: number[] } = {
@@ -42,95 +40,95 @@ export const PRIZE_DISTRIBUTIONS: { [k: number]: number[] } = {
   4: [0.5, 0.3, 0.2]
 }
 
-function sortPlayers(players: Player[]): Player[] {
-  return sortBy(players, "placement")
+function sortmanagers(managers: BuyInManager[]): BuyInManager[] {
+  return sortBy(managers, "rank")
 }
 
-export function calculatePrizes(players: Player[]): PrizeCalculation {
-  const playersById: { [id: string]: Player } = {}
+export function calculatePrizes(managers: BuyInManager[]): PrizeCalculation {
+  const managersById: { [id: string]: BuyInManager } = {}
   let buyIns: number[] = []
-  const buyInPlayers: { [key: number]: Player[] } = {}
+  const buyInmanagers: { [key: number]: BuyInManager[] } = {}
   let totalPrize: number = 0
-  players.forEach((player) => {
-    const { buyIn } = player
-    playersById[player.fplId] = player
+  managers.forEach((manager) => {
+    const { buyIn } = manager
+    managersById[manager.id] = manager
     if (!buyIns.includes(buyIn)) buyIns.push(buyIn)
-    buyInPlayers[buyIn] = [...(buyInPlayers[buyIn] || []), player]
+    buyInmanagers[buyIn] = [...(buyInmanagers[buyIn] || []), manager]
     totalPrize += buyIn
   })
   buyIns = sortBy(buyIns, undefined, true)
 
-  let potPlayers: { [key: number]: Player[] } = {}
+  let potManagers: { [key: number]: BuyInManager[] } = {}
 
   buyIns.forEach((buyIn, index) => {
     const higherBuyIns = buyIns.slice(0, index)
-    let pot: Player[] = []
+    let pot: BuyInManager[] = []
     ;[buyIn, ...higherBuyIns].forEach((someBuyIn) => {
-      pot.push(...buyInPlayers[someBuyIn])
+      pot.push(...buyInmanagers[someBuyIn])
     })
-    potPlayers[buyIn] = pot
+    potManagers[buyIn] = pot
   })
 
   function calculatePrizesFromPot(pot: Omit<Pot, "prizes">): Prize[] {
-    const winners = sortPlayers(pot.players).slice(0, 3)
+    const winners = sortmanagers(pot.managers).slice(0, 3)
     if (!winners.length) return []
-    const distributionIndex = Math.min(pot.players.length, 4)
+    const distributionIndex = Math.min(pot.managers.length, 4)
     const distribution = PRIZE_DISTRIBUTIONS[distributionIndex]
     return winners.map((winner, index) => {
       const prizeValue = distribution[index] * pot.totalPrize
-      return { player: winner, value: prizeValue }
+      return { manager: winner, value: prizeValue }
     })
   }
 
-  let pots: { [k: number]: Pot } = mapValues(potPlayers, (value, key) => {
+  let pots: { [k: number]: Pot } = mapValues(potManagers, (value, key) => {
     const buyIn = Number(key)
-    const players = value
+    const managers = value
     const buyInIndex = buyIns.indexOf(buyIn)
     if (buyInIndex < 0) {
       throw new Error("invalid buyIn index")
     }
     const lowerBuyInIndex = buyInIndex + 1
-    const prizePerPlayer =
+    const prizePermanager =
       lowerBuyInIndex <= buyIns.length - 1
         ? buyIn - buyIns[lowerBuyInIndex]
         : buyIn
     const pot = {
       buyIn,
-      totalPrize: prizePerPlayer * players.length,
-      players: sortPlayers(players)
+      totalPrize: prizePermanager * managers.length,
+      managers: sortmanagers(managers)
     }
     return { ...pot, prizes: calculatePrizesFromPot(pot) }
   })
 
-  const totalPrizePerPlayer: { [id: string]: number } = {}
+  const totalPrizePermanager: { [id: string]: number } = {}
   Object.values(pots).forEach((pot) => {
     const { prizes } = pot
     prizes.forEach((prize) => {
-      totalPrizePerPlayer[prize.player.fplId] =
-        (totalPrizePerPlayer[prize.player.fplId] || 0) + prize.value
+      totalPrizePermanager[prize.manager.id] =
+        (totalPrizePermanager[prize.manager.id] || 0) + prize.value
     })
   })
 
-  let prizes: Array<{ value: number; player: Player }> = []
-  Object.keys(totalPrizePerPlayer).forEach((playerId) => {
+  let prizes: Array<{ value: number; manager: BuyInManager }> = []
+  Object.keys(totalPrizePermanager).forEach((managerId) => {
     prizes.push({
-      player: playersById[playerId],
-      value: totalPrizePerPlayer[playerId]
+      manager: managersById[managerId],
+      value: totalPrizePermanager[managerId]
     })
   })
   prizes = sortBy(prizes, "value", true)
 
-  const playersWithPrize: PlayerWithPrize[] = players.map((player) => {
-    const prizeValue = totalPrizePerPlayer[player.fplId] || 0
-    return { ...player, prizeValue, profit: prizeValue - player.buyIn }
+  const managersWithPrize: managerWithPrize[] = managers.map((manager) => {
+    const prizeValue = totalPrizePermanager[manager.id] || 0
+    return { ...manager, prizeValue, profit: prizeValue - manager.buyIn }
   })
 
   return {
-    potPlayers,
+    potManagers,
     totalPrize,
     buyIns,
     pots,
     prizes,
-    players: playersWithPrize
+    managers: managersWithPrize
   }
 }
