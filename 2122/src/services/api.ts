@@ -12,6 +12,8 @@ import {
 } from "runtypes"
 import betterFetch from "../util/betterFetch"
 
+// NB: If you're trying to add more endpoints and you get a confusing error -
+// for some reason you need to end the url with a / for the proxy to work
 const BASE_URL =
   "https://dronz-proxy.herokuapp.com/https://fantasy.premierleague.com/api"
 const LEAGUE_ID = 1011990
@@ -91,6 +93,9 @@ const GameweekRT = Record({
 })
 type GameweekRT = Static<typeof GameweekRT>
 
+const FixtureRT = Array(Record({}))
+type FixtureRT = Static<typeof FixtureRT>
+
 export function fetchBootstrap() {
   const url = `${BASE_URL}/bootstrap-static/`
   return runtypeFetch(BootstrapRT, url)
@@ -102,6 +107,11 @@ export function fetchLeague(opts: { leagueId: number }) {
 export function fetchGameweek(opts: { teamId: number; eventId: number }) {
   const url = `${BASE_URL}/entry/${opts.teamId}/event/${opts.eventId}/picks/`
   return runtypeFetch(GameweekRT, url)
+}
+export function fetchFixtures(opts: { eventId: number }) {
+  const url = `${BASE_URL}/fixtures/?event=${opts.eventId}`
+  console.log({ url })
+  return runtypeFetch(FixtureRT, url)
 }
 
 export interface Player {
@@ -135,6 +145,7 @@ export interface League {
   name: string
   managers: Manager[]
 }
+export interface Fixture {}
 
 function parseCurrentEventId(events: EventRT[]): number {
   let currentEventId = 0
@@ -176,12 +187,14 @@ function parseTeam(team: TeamRT): Team {
   }
 }
 
-async function init() {
+export async function init() {
   const bootstrap = await fetchBootstrap()
   const players = bootstrap.elements.map(parsePlayerFromElement)
   const teams = bootstrap.teams.map(parseTeam)
   const currentEventId = parseCurrentEventId(bootstrap.events)
-  return { players, teams, currentEventId }
+  const fixtures = await fetchFixtures({ eventId: currentEventId || 1 })
+  console.log({ players, teams, currentEventId, fixtures })
+  return { players, teams, currentEventId, fixtures }
 }
 
 export function useInitQuery() {
@@ -194,7 +207,7 @@ function getPickType(pick: PickRT): PickType {
   return pick.position <= 11 ? "STARTING" : "BENCHED"
 }
 
-async function getLeague(
+export async function getLeague(
   leagueId: number,
   currentEventId: number
 ): Promise<League> {

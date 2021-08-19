@@ -1,6 +1,12 @@
 import React, { Dispatch, SetStateAction } from "react"
 import managersData from "src/data/managers.json"
-import { useGetLeagueQuery } from "./services/api"
+import {
+  Fixture,
+  Player,
+  Team,
+  useGetLeagueQuery,
+  useInitQuery
+} from "./services/api"
 import {
   BuyInManager,
   calculatePrizes,
@@ -10,6 +16,12 @@ import {
 interface LeagueContextType {
   setManagers: Dispatch<SetStateAction<BuyInManager[]>>
   prizeCalculation: PrizeCalculation
+  players: Player[]
+  teams: Team[]
+  fixtures: Fixture[]
+  currentEventId: number
+  isSuccess: boolean
+  isError: boolean
 }
 
 const defaultValue: LeagueContextType = {
@@ -21,7 +33,13 @@ const defaultValue: LeagueContextType = {
     totalPrize: 0,
     prizes: [],
     managers: []
-  }
+  },
+  players: [],
+  teams: [],
+  fixtures: [],
+  currentEventId: 1,
+  isSuccess: false,
+  isError: false
 }
 
 export const LeagueContext =
@@ -40,10 +58,11 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
     return calculatePrizes(managers)
   }, [managers])
 
-  const { data } = useGetLeagueQuery()
+  const { data: initData } = useInitQuery()
+  const { data: leagueData, isSuccess, isError } = useGetLeagueQuery()
   React.useEffect(() => {
-    if (data) {
-      const managers = data.managers.map((manager) => {
+    if (leagueData) {
+      const managers = leagueData.managers.map((manager) => {
         const buyInLookupValue = buyInsById[String(manager.id)]
         const buyIn = buyInLookupValue || 0
         if (!buyInLookupValue) {
@@ -57,9 +76,16 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
       })
       setManagers(managers)
     }
-  }, [data])
+  }, [leagueData])
 
-  const contextValue = { setManagers, prizeCalculation }
+  const contextValue = {
+    ...defaultValue,
+    ...initData,
+    setManagers,
+    prizeCalculation,
+    isSuccess,
+    isError
+  }
 
   return <LeagueContext.Provider value={contextValue} children={children} />
 }
