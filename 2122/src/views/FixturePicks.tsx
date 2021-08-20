@@ -3,6 +3,7 @@ import Section from "src/components/Section"
 import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
 import { Fixture, FixtureTeam, Player } from "src/services/api"
+import colors from "src/style/colors"
 import { StateSetter } from "src/types"
 import { BuyInManager } from "src/util/calculatePrizes"
 import { formatName } from "src/util/formatName"
@@ -53,20 +54,24 @@ const PlayerContainer = styled.div`
 
 const PlayerName = styled.div`
   font-size: 13px;
+  padding: 2px 0;
 `
 
 const ManagersContainer = styled.div<{ home?: boolean }>`
   position: absolute;
   top: 100%;
+  margin-top: -3px;
   ${(p) => (p.home ? "right: 0;" : "left: 0;")}
   padding: 10px;
-  outline: 1px solid black;
+  border: 1px solid ${colors.purple};
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
   background-color: white;
   z-index: 1;
 `
 
 const ManagerName = styled.div`
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 `
 
@@ -87,7 +92,6 @@ const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
 ) => {
   const { team, home = false } = props
   const { playerId, setPlayerId } = React.useContext(StateContext)
-  console.log({ playerId, setPlayerId })
   return (
     <TeamContainer>
       <TeamFirstRow flexEnd={home}>

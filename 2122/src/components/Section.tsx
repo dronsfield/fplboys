@@ -1,7 +1,8 @@
 import styled from "styled-components"
 
 const SectionOuter = styled.div`
-  padding: 20px 10px;
+  padding: 16px 12px;
+  flex: 1;
   &:nth-child(2n) {
     background-color: #fafafa;
   }

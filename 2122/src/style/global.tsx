@@ -14,7 +14,7 @@ export const GlobalStyle = createGlobalStyle`
     overflow-y: scroll;
     height: 100%;
     color: ${colors.text};
-    font-family: sans-serif;
+    font-family: IBM Plex Sans, sans-serif;
     font-size: 13px;
     @media (min-width: 500px) {
       font-size: 15px;
@@ -33,6 +33,15 @@ export const GlobalStyle = createGlobalStyle`
 
   img, svg {
     vertical-align: bottom;
+  }
+
+  p, h1, h2, h3, h4, h5 {
+    &:first-child {
+      margin-top: 0;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 `
 

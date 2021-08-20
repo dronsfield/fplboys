@@ -2,13 +2,14 @@ import React from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { createWebStoragePersistor } from "react-query/createWebStoragePersistor-experimental"
 import { persistQueryClient } from "react-query/persistQueryClient-experimental"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { LeagueContextProvider } from "./LeagueContext"
 import GlobalStyle from "./style/global"
-import Calculation from "./views/Calculation"
 import FixturePicks from "./views/FixturePicks"
 import Intro from "./views/Intro"
-import LiveTable from "./views/LiveTable"
+import Layout from "./views/Layout"
 import Skeleton from "./views/Skeleton"
+import Table from "./views/Table"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,12 +33,17 @@ const App: React.FC<{}> = () => {
     <QueryClientProvider client={queryClient}>
       <LeagueContextProvider>
         <GlobalStyle />
-        <Skeleton>
-          <Intro />
-          <LiveTable />
-          <Calculation />
-          <FixturePicks />
-        </Skeleton>
+        <Router>
+          <Layout>
+            <Skeleton>
+              <Switch>
+                <Route path="/table" component={Table} />
+                <Route path="/fixtures" component={FixturePicks} />
+                <Route path="/" component={Intro} />
+              </Switch>
+            </Skeleton>
+          </Layout>
+        </Router>
       </LeagueContextProvider>
     </QueryClientProvider>
   )

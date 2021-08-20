@@ -24,8 +24,8 @@ const Calculation: React.FC<{}> = (props) => {
               {lilSpacer}
               <div>Total prize: £{totalPrize}</div>
               {lilSpacer}
+              <div>Managers ({managers.length}): </div>
               <div>
-                Managers ({managers.length}):{" "}
                 {managers.map((manager) => formatName(manager.name)).join(", ")}
               </div>
               {lilSpacer}
@@ -44,7 +44,6 @@ const Calculation: React.FC<{}> = (props) => {
             </div>
           )
         })}
-        <hr />
         <Spacer height={20} />
         <div>
           <strong>Overall</strong>

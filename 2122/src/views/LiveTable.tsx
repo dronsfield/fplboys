@@ -54,7 +54,7 @@ const ManagerSpan = styled.span`
 
 const MoneySpan = styled.span<{ color?: string }>`
   width: 55px;
-  @media (min-width: 500px) {
+  @media (min-width: 600px) {
     width: 65px;
   }
   ${(p) =>
@@ -62,7 +62,7 @@ const MoneySpan = styled.span<{ color?: string }>`
 `
 
 const DesktopOnlyMoneySpan = styled(MoneySpan)`
-  @media (max-width: 400px) {
+  @media (max-width: 600px) {
     display: none;
   }
 `

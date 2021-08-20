@@ -8,7 +8,6 @@ const MONZO_LINK = "https://monzo.me/joshuadronsfield"
 const Intro: React.FC<{}> = (props) => {
   return (
     <Section>
-      <h1>F P L B O Y S</h1>
       <p>
         Your favourite FPL mini-league is back! With a fancy new tiered buy-in
         system, allowing you to choose how much cash you want to put on the
