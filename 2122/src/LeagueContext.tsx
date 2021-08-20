@@ -16,6 +16,7 @@ import {
 interface LeagueContextType {
   setManagers: Dispatch<SetStateAction<BuyInManager[]>>
   prizeCalculation: PrizeCalculation
+  managers: BuyInManager[]
   players: Players
   teams: Teams
   fixtures: Fixture[]
@@ -34,6 +35,7 @@ const defaultValue: LeagueContextType = {
     prizes: [],
     managers: []
   },
+  managers: [],
   players: {},
   teams: {},
   fixtures: [],
@@ -82,6 +84,7 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
   const contextValue = {
     ...defaultValue,
     ...initData,
+    managers,
     setManagers,
     prizeCalculation,
     isSuccess,
