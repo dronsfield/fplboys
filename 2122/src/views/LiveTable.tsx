@@ -37,15 +37,15 @@ const Header = styled(Item)`
 `
 
 const PointsSpan = styled.span`
-  width: 55px;
+  width: 50px;
   @media (min-width: 600px) {
-    width: 65px;
+    width: 60px;
   }
 `
 
 const RankSpan = styled.span`
   display: inline-block;
-  width: 40px;
+  width: 36px;
   opacity: 0.5;
   font-weight: bold;
   font-style: italic;
@@ -60,9 +60,19 @@ const MoneySpan = styled(PointsSpan)<{ color?: string }>`
   ${(p) => (p.color ? `color: ${p.color};` : ``)}
 `
 
+const ProfitSpan = styled(MoneySpan)`
+  width: 60px;
+  @media (min-width: 600px) {
+    width: 75px;
+  }
+`
+
 const DesktopOnlyMoneySpan = styled(MoneySpan)`
-  @media (max-width: 600px) {
+  @media (max-width: 599px) {
     display: none;
+  }
+  @media (min-width: 600px) {
+    width: 75px;
   }
 `
 
@@ -89,7 +99,7 @@ function formatMoney(
 }
 
 const RankModifiersContainer = styled.div`
-  width: 32px;
+  width: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -161,7 +171,7 @@ const Table: React.FC<{}> = (props) => {
             <PointsSpan children="Points" />
             <MoneySpan children="Buy-in" />
             <DesktopOnlyMoneySpan children="Prize" />
-            <MoneySpan children="Profit" />
+            <ProfitSpan children="Profit" />
           </Header>
           {managers.map((manager) => {
             return (
@@ -177,7 +187,7 @@ const Table: React.FC<{}> = (props) => {
                 <PointsSpan children={manager.totalPoints} />
                 <MoneySpan {...formatMoney(manager.buyIn)} />
                 <DesktopOnlyMoneySpan {...formatMoney(manager.prizeValue)} />
-                <MoneySpan {...formatMoney(manager.profit, true)} />
+                <ProfitSpan {...formatMoney(manager.profit, true)} />
               </Item>
             )
           })}
