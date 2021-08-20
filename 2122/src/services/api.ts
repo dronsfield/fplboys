@@ -10,6 +10,7 @@ import {
   String,
   ValidationError
 } from "runtypes"
+import { keyBy } from "src/util/keyBy"
 import betterFetch from "../util/betterFetch"
 
 // NB: If you're trying to add more endpoints and you get a confusing error -
@@ -93,7 +94,19 @@ const GameweekRT = Record({
 })
 type GameweekRT = Static<typeof GameweekRT>
 
-const FixtureRT = Array(Record({}))
+const StatRT = Record({ value: Number, element: Number })
+const FixtureRT = Record({
+  id: Number,
+  kickoff_time: String,
+  stats: Array(
+    Record({ identifier: String, a: Array(StatRT), h: Array(StatRT) })
+  ),
+  team_h: Number,
+  team_h_score: Number,
+  team_a: Number,
+  team_a_score: Number
+})
+
 type FixtureRT = Static<typeof FixtureRT>
 
 export function fetchBootstrap() {
@@ -111,7 +124,7 @@ export function fetchGameweek(opts: { teamId: number; eventId: number }) {
 export function fetchFixtures(opts: { eventId: number }) {
   const url = `${BASE_URL}/fixtures/?event=${opts.eventId}`
   console.log({ url })
-  return runtypeFetch(FixtureRT, url)
+  return runtypeFetch(Array(FixtureRT), url)
 }
 
 export interface Player {
@@ -123,12 +136,15 @@ export interface Player {
   teamCode: number
   selectedBy: string
 }
+export type Players = { [id: number]: Player }
 export interface Team {
   id: number
   code: number
   name: string
   shortName: string
 }
+export type Teams = { [id: number]: Team }
+
 export type PickType = "STARTING" | "BENCHED" | "CAPTAIN" | "VICE"
 export interface Manager {
   id: number
@@ -145,7 +161,19 @@ export interface League {
   name: string
   managers: Manager[]
 }
-export interface Fixture {}
+
+export interface FixtureTeam {
+  // goals: Array<{ }
+  teamId: number
+  team: Team
+  score: number
+}
+export interface Fixture {
+  id: number
+  kickoffTime: string
+  home: FixtureTeam
+  away: FixtureTeam
+}
 
 function parseCurrentEventId(events: EventRT[]): number {
   let currentEventId = 0
@@ -186,13 +214,43 @@ function parseTeam(team: TeamRT): Team {
     shortName: short_name
   }
 }
+function parseFixture(fixture: FixtureRT, teams: Teams): Fixture {
+  const {
+    id,
+    kickoff_time,
+    stats,
+    team_h,
+    team_h_score,
+    team_a,
+    team_a_score
+  } = fixture
+  return {
+    id,
+    kickoffTime: kickoff_time,
+    home: {
+      teamId: team_h,
+      team: teams[team_h],
+      score: team_h_score
+    },
+    away: {
+      teamId: team_a,
+      team: teams[team_a],
+      score: team_a_score
+    }
+  }
+}
 
 export async function init() {
   const bootstrap = await fetchBootstrap()
-  const players = bootstrap.elements.map(parsePlayerFromElement)
-  const teams = bootstrap.teams.map(parseTeam)
+  const playerList = bootstrap.elements.map(parsePlayerFromElement)
+  const players = keyBy(playerList, "id")
+  const teamList = bootstrap.teams.map(parseTeam)
+  const teams = keyBy(teamList, "id")
   const currentEventId = parseCurrentEventId(bootstrap.events)
-  const fixtures = await fetchFixtures({ eventId: currentEventId || 1 })
+  const fixturesResponse = await fetchFixtures({ eventId: currentEventId || 1 })
+  const fixtures = fixturesResponse.map((fixture) =>
+    parseFixture(fixture, teams)
+  )
   console.log({ players, teams, currentEventId, fixtures })
   return { players, teams, currentEventId, fixtures }
 }

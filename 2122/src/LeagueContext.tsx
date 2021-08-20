@@ -2,8 +2,8 @@ import React, { Dispatch, SetStateAction } from "react"
 import managersData from "src/data/managers.json"
 import {
   Fixture,
-  Player,
-  Team,
+  Players,
+  Teams,
   useGetLeagueQuery,
   useInitQuery
 } from "./services/api"
@@ -16,8 +16,8 @@ import {
 interface LeagueContextType {
   setManagers: Dispatch<SetStateAction<BuyInManager[]>>
   prizeCalculation: PrizeCalculation
-  players: Player[]
-  teams: Team[]
+  players: Players
+  teams: Teams
   fixtures: Fixture[]
   currentEventId: number
   isSuccess: boolean
@@ -34,8 +34,8 @@ const defaultValue: LeagueContextType = {
     prizes: [],
     managers: []
   },
-  players: [],
-  teams: [],
+  players: {},
+  teams: {},
   fixtures: [],
   currentEventId: 1,
   isSuccess: false,
@@ -59,6 +59,7 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
   }, [managers])
 
   const { data: initData } = useInitQuery()
+
   const { data: leagueData, isSuccess, isError } = useGetLeagueQuery()
   React.useEffect(() => {
     if (leagueData) {

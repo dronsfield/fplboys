@@ -5,6 +5,7 @@ import { persistQueryClient } from "react-query/persistQueryClient-experimental"
 import { LeagueContextProvider } from "./LeagueContext"
 import GlobalStyle from "./style/global"
 import FixturePicks from "./views/FixturePicks"
+import Skeleton from "./views/Skeleton"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,7 +32,9 @@ const App: React.FC<{}> = () => {
         {/* <Intro />
         <LiveTable />
         <Calculation /> */}
-        <FixturePicks />
+        <Skeleton>
+          <FixturePicks />
+        </Skeleton>
       </LeagueContextProvider>
     </QueryClientProvider>
   )
