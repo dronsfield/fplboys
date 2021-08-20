@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react"
+import React from "react"
 import managersData from "src/data/managers.json"
 import {
   Fixture,
@@ -7,6 +7,7 @@ import {
   useGetLeagueQuery,
   useInitQuery
 } from "./services/api"
+import { StateSetter } from "./types"
 import {
   BuyInManager,
   calculatePrizes,
@@ -14,7 +15,7 @@ import {
 } from "./util/calculatePrizes"
 
 interface LeagueContextType {
-  setManagers: Dispatch<SetStateAction<BuyInManager[]>>
+  setManagers: StateSetter<BuyInManager[]>
   prizeCalculation: PrizeCalculation
   managers: BuyInManager[]
   players: Players

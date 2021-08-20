@@ -3,9 +3,23 @@ import Section from "src/components/Section"
 import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
 import { Fixture, FixtureTeam, Player } from "src/services/api"
+import { StateSetter } from "src/types"
 import { BuyInManager } from "src/util/calculatePrizes"
+import { formatName } from "src/util/formatName"
 import { sortBy } from "src/util/sortBy"
 import styled from "styled-components"
+
+interface StateContextValue {
+  playerId?: number
+  setPlayerId: StateSetter<number | undefined>
+}
+const defaultStateContextValue: StateContextValue = {
+  playerId: undefined,
+  setPlayerId: () => {}
+}
+const StateContext = React.createContext<StateContextValue>(
+  defaultStateContextValue
+)
 
 const Row = styled.div<{ flexEnd?: boolean }>`
   display: flex;
@@ -24,13 +38,36 @@ const TeamFirstRow = styled(Row)`
 `
 
 const TeamName = styled.div`
-  font-size: 16px;
+  font-size: 18px;
 `
 
 const Score = styled.div`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   font-family: monospace;
+`
+
+const PlayerContainer = styled.div`
+  position: relative;
+`
+
+const PlayerName = styled.div`
+  font-size: 13px;
+`
+
+const ManagersContainer = styled.div<{ home?: boolean }>`
+  position: absolute;
+  top: 100%;
+  ${(p) => (p.home ? "right: 0;" : "left: 0;")}
+  padding: 10px;
+  outline: 1px solid black;
+  background-color: white;
+  z-index: 1;
+`
+
+const ManagerName = styled.div`
+  font-size: 11px;
+  white-space: nowrap;
 `
 
 interface TeamPick {
@@ -45,10 +82,12 @@ interface FixtureWithPicks extends Fixture {
   away: FixtureTeamWithPicks
 }
 
-const renderTeam: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
+const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
   props
 ) => {
   const { team, home = false } = props
+  const { playerId, setPlayerId } = React.useContext(StateContext)
+  console.log({ playerId, setPlayerId })
   return (
     <TeamContainer>
       <TeamFirstRow flexEnd={home}>
@@ -62,7 +101,29 @@ const renderTeam: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
           {team.picks.map((pick) => {
             const { player, managers } = pick
             const text = `${player.webName} (${managers.length})`
-            return <div key={player.id} children={text} />
+            return (
+              <PlayerContainer>
+                <PlayerName
+                  key={player.id}
+                  children={text}
+                  onClick={() =>
+                    setPlayerId((id) =>
+                      id === player.id ? undefined : player.id
+                    )
+                  }
+                />
+                {playerId === player.id ? (
+                  <ManagersContainer home={home}>
+                    {managers.map((manager) => {
+                      const { id, rank, name } = manager
+                      return (
+                        <ManagerName children={formatName(name)} key={id} />
+                      )
+                    })}
+                  </ManagersContainer>
+                ) : null}
+              </PlayerContainer>
+            )
           })}
         </div>
       </Row>
@@ -74,13 +135,13 @@ const renderFixture: React.FC<{ fixture: FixtureWithPicks }> = (props) => {
   const { fixture } = props
   return (
     <Row>
-      {renderTeam({ team: fixture.home, home: true })}
-      {renderTeam({ team: fixture.away })}
+      <TeamPicks {...{ team: fixture.home, home: true }} />
+      <TeamPicks {...{ team: fixture.away }} />
     </Row>
   )
 }
 
-const FixturePicks: React.FC<{}> = (props) => {
+function useFixturesWithPicks() {
   const { fixtures, managers, teams, players } = useLeagueContext()
   const fixturesWithPicks: FixtureWithPicks[] = React.useMemo(() => {
     const picksByTeam: { [teamId: number]: { [playerId: number]: TeamPick } } =
@@ -113,7 +174,6 @@ const FixturePicks: React.FC<{}> = (props) => {
           }
         }
       })
-      console.log(pickedPlayers)
     })
     function addPicksToFixtureTeam(
       fixtureTeam: FixtureTeam
@@ -141,13 +201,21 @@ const FixturePicks: React.FC<{}> = (props) => {
       }
     })
   }, [fixtures, managers, players])
-  console.log(fixturesWithPicks)
+  return fixturesWithPicks
+}
+
+const FixturePicks: React.FC<{}> = (props) => {
+  const [playerId, setPlayerId] = React.useState<number>()
+  const fixturesWithPicks = useFixturesWithPicks()
+
   return (
-    <Section>
-      {fixturesWithPicks.map((fixture) => {
-        return renderFixture({ fixture })
-      })}
-    </Section>
+    <StateContext.Provider value={{ playerId, setPlayerId }}>
+      <Section>
+        {fixturesWithPicks.map((fixture) => {
+          return renderFixture({ fixture })
+        })}
+      </Section>
+    </StateContext.Provider>
   )
 }
 
