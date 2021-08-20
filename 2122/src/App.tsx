@@ -8,7 +8,6 @@ import GlobalStyle from "./style/global"
 import FixturePicks from "./views/FixturePicks"
 import Intro from "./views/Intro"
 import Layout from "./views/Layout"
-import Skeleton from "./views/Skeleton"
 import Table from "./views/Table"
 
 const queryClient = new QueryClient({
@@ -35,13 +34,11 @@ const App: React.FC<{}> = () => {
         <GlobalStyle />
         <Router>
           <Layout>
-            <Skeleton>
-              <Switch>
-                <Route path="/table" component={Table} />
-                <Route path="/fixtures" component={FixturePicks} />
-                <Route path="/" component={Intro} />
-              </Switch>
-            </Skeleton>
+            <Switch>
+              <Route path="/table" component={Table} />
+              <Route path="/fixtures" component={FixturePicks} />
+              <Route path="/" component={Intro} />
+            </Switch>
           </Layout>
         </Router>
       </LeagueContextProvider>

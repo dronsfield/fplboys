@@ -1,3 +1,4 @@
+import colors from "src/style/colors"
 import styled, { keyframes } from "styled-components"
 
 const kf1 = keyframes`
@@ -34,7 +35,7 @@ const spin = keyframes`
 `
 
 export const Loader = styled.div`
-  color: currentColor;
+  color: ${colors.darkPurple};
   font-size: 40px;
   text-indent: -9999em;
   overflow: hidden;

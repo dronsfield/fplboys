@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import Spacer from "src/components/Spacer"
 import colors from "src/style/colors"
 import styled from "styled-components"
@@ -31,7 +31,11 @@ const NavButtons = styled.div`
   justify-content: center;
 `
 
-const NavButton = styled(Link)`
+const CustomLink = (props: any) => (
+  <NavLink {...props} activeClassName="active" exact />
+)
+
+const NavButton = styled(CustomLink)`
   font-weight: bold;
   text-transform: uppercase;
   padding: 5px 7px;
@@ -40,6 +44,20 @@ const NavButton = styled(Link)`
   color: white;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.2);
+  transition: 0.1s linear all;
+  -webkit-tap-highlight-color: transparent;
+
+  &.active {
+    background-color: white;
+    color: ${colors.purple};
+  }
+
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  &.active:focus {
+    background-color: white;
+  }
 `
 
 const Layout: React.FC<{}> = (props) => {

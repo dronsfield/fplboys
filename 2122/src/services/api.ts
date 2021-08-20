@@ -10,6 +10,7 @@ import {
   String,
   ValidationError
 } from "runtypes"
+import appConfig from "src/appConfig"
 import { keyBy } from "src/util/keyBy"
 import betterFetch from "../util/betterFetch"
 
@@ -17,7 +18,7 @@ import betterFetch from "../util/betterFetch"
 // for some reason you need to end the url with a / for the proxy to work
 const BASE_URL =
   "https://dronz-proxy.herokuapp.com/https://fantasy.premierleague.com/api"
-const LEAGUE_ID = 1011990
+const LEAGUE_ID = appConfig.LEAGUE_ID
 
 async function runtypeFetch<T, R>(runtype: Runtype<R>, url: string) {
   try {

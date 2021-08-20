@@ -16,18 +16,22 @@ const Calculation: React.FC<{}> = (props) => {
       <h3>Prize calculation breakdown:</h3>
       {lilSpacer}
       <div>
-        {buyIns.map((buyIn) => {
+        {buyIns.map((buyIn, index) => {
           const { totalPrize, managers, prizes } = pots[buyIn]
+          if (buyIn === 0) return null
           return (
             <div key={buyIn}>
               <strong>£{buyIn} buy-in pot</strong>
-              {lilSpacer}
-              <div>Total prize: £{totalPrize}</div>
               {lilSpacer}
               <div>Managers ({managers.length}): </div>
               <div>
                 {managers.map((manager) => formatName(manager.name)).join(", ")}
               </div>
+              {lilSpacer}
+              <div>{`Total prize: ${managers.length} x (${buyIn} - ${
+                buyIns[index + 1] || 0
+              }) = £${totalPrize}`}</div>
+
               {lilSpacer}
               <div>
                 Winners:
@@ -44,7 +48,6 @@ const Calculation: React.FC<{}> = (props) => {
             </div>
           )
         })}
-        <Spacer height={20} />
         <div>
           <strong>Overall</strong>
           {lilSpacer}

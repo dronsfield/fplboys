@@ -37,7 +37,10 @@ const Header = styled(Item)`
 `
 
 const PointsSpan = styled.span`
-  width: 50px;
+  width: 55px;
+  @media (min-width: 600px) {
+    width: 65px;
+  }
 `
 
 const RankSpan = styled.span`
@@ -48,17 +51,13 @@ const RankSpan = styled.span`
   font-style: italic;
 `
 
-const ManagerSpan = styled.span`
+const ManagerSpan = styled.a`
   flex: 1;
+  text-decoration: none;
 `
 
-const MoneySpan = styled.span<{ color?: string }>`
-  width: 55px;
-  @media (min-width: 600px) {
-    width: 65px;
-  }
-  ${(p) =>
-    p.color ? `color: ${p.color};` : ``}// border-left: 1px solid black;
+const MoneySpan = styled(PointsSpan)<{ color?: string }>`
+  ${(p) => (p.color ? `color: ${p.color};` : ``)}
 `
 
 const DesktopOnlyMoneySpan = styled(MoneySpan)`
@@ -119,7 +118,8 @@ const RankModifiers = (props: {
 const Table: React.FC<{}> = (props) => {
   const {
     prizeCalculation: { managers },
-    setManagers
+    setManagers,
+    currentEventId
   } = useLeagueContext()
 
   const getModifierHandlers = (id: number) => {
@@ -170,7 +170,10 @@ const Table: React.FC<{}> = (props) => {
                   modifierHandlers={getModifierHandlers(manager.id)}
                 />
                 <RankSpan children={`#${manager.rank}`} />
-                <ManagerSpan children={formatName(manager.name)} />
+                <ManagerSpan
+                  children={formatName(manager.name)}
+                  href={`https://fantasy.premierleague.com/entry/${manager.id}/event/${currentEventId}`}
+                />
                 <PointsSpan children={manager.totalPoints} />
                 <MoneySpan {...formatMoney(manager.buyIn)} />
                 <DesktopOnlyMoneySpan {...formatMoney(manager.prizeValue)} />

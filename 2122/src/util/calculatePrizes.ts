@@ -100,26 +100,28 @@ export function calculatePrizes(managers: BuyInManager[]): PrizeCalculation {
     return { ...pot, prizes: calculatePrizesFromPot(pot) }
   })
 
-  const totalPrizePermanager: { [id: string]: number } = {}
+  const totalPrizePerManager: { [id: string]: number } = {}
   Object.values(pots).forEach((pot) => {
     const { prizes } = pot
     prizes.forEach((prize) => {
-      totalPrizePermanager[prize.manager.id] =
-        (totalPrizePermanager[prize.manager.id] || 0) + prize.value
+      totalPrizePerManager[prize.manager.id] =
+        (totalPrizePerManager[prize.manager.id] || 0) + prize.value
     })
   })
 
   let prizes: Array<{ value: number; manager: BuyInManager }> = []
-  Object.keys(totalPrizePermanager).forEach((managerId) => {
-    prizes.push({
-      manager: managersById[managerId],
-      value: totalPrizePermanager[managerId]
-    })
+  Object.keys(totalPrizePerManager).forEach((managerId) => {
+    if (totalPrizePerManager[managerId]) {
+      prizes.push({
+        manager: managersById[managerId],
+        value: totalPrizePerManager[managerId]
+      })
+    }
   })
   prizes = sortBy(prizes, "value", true)
 
   const managersWithPrize: managerWithPrize[] = managers.map((manager) => {
-    const prizeValue = totalPrizePermanager[manager.id] || 0
+    const prizeValue = totalPrizePerManager[manager.id] || 0
     return { ...manager, prizeValue, profit: prizeValue - manager.buyIn }
   })
 
