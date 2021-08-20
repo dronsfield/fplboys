@@ -4,7 +4,10 @@ import { createWebStoragePersistor } from "react-query/createWebStoragePersistor
 import { persistQueryClient } from "react-query/persistQueryClient-experimental"
 import { LeagueContextProvider } from "./LeagueContext"
 import GlobalStyle from "./style/global"
+import Calculation from "./views/Calculation"
 import FixturePicks from "./views/FixturePicks"
+import Intro from "./views/Intro"
+import LiveTable from "./views/LiveTable"
 import Skeleton from "./views/Skeleton"
 
 const queryClient = new QueryClient({
@@ -29,10 +32,10 @@ const App: React.FC<{}> = () => {
     <QueryClientProvider client={queryClient}>
       <LeagueContextProvider>
         <GlobalStyle />
-        {/* <Intro />
-        <LiveTable />
-        <Calculation /> */}
         <Skeleton>
+          <Intro />
+          <LiveTable />
+          <Calculation />
           <FixturePicks />
         </Skeleton>
       </LeagueContextProvider>
