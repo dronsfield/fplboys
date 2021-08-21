@@ -3,6 +3,7 @@ import { useQuery } from "react-query"
 import {
   Array,
   Boolean,
+  Null,
   Number,
   Record,
   Runtype,
@@ -103,9 +104,9 @@ const FixtureRT = Record({
     Record({ identifier: String, a: Array(StatRT), h: Array(StatRT) })
   ),
   team_h: Number,
-  team_h_score: Number,
+  team_h_score: Number.Or(Null),
   team_a: Number,
-  team_a_score: Number
+  team_a_score: Number.Or(Null)
 })
 
 type FixtureRT = Static<typeof FixtureRT>
@@ -167,7 +168,7 @@ export interface FixtureTeam {
   // goals: Array<{ }
   teamId: number
   team: Team
-  score: number
+  score: number | null
 }
 export interface Fixture {
   id: number

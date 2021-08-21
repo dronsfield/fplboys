@@ -103,7 +103,7 @@ const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
   return (
     <TeamContainer>
       <TeamFirstRow flexEnd={home}>
-        <Score children={team.score} />
+        <Score children={team.score === null ? "-" : team.score} />
         <Spacer width={8} />
         <TeamName children={team.team.name} />
       </TeamFirstRow>
@@ -176,6 +176,7 @@ function useFixturesWithPicks() {
       const pickedPlayerIds: number[] = Object.keys(picks).map(Number)
       pickedPlayerIds.forEach((playerId) => {
         const player = players[playerId]
+        if (!player) return
         const pickType = picks[playerId]
         const teamId = player.teamId
         if (picksByTeam[teamId]) {
