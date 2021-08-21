@@ -4,6 +4,7 @@ import Spacer from "src/components/Spacer"
 import { useLeagueContext } from "src/LeagueContext"
 import { Fixture, FixtureTeam, PickType, Player } from "src/services/api"
 import colors from "src/style/colors"
+import { normalizeButton, removeHighlight } from "src/style/mixins"
 import { StateSetter } from "src/types"
 import { BuyInManager } from "src/util/calculatePrizes"
 import { formatName } from "src/util/formatName"
@@ -53,7 +54,9 @@ const PlayerContainer = styled.div`
   position: relative;
 `
 
-const PlayerName = styled.div`
+const PlayerName = styled.button`
+  ${normalizeButton}
+  ${removeHighlight}
   font-size: 13px;
   padding: 2px 0;
   cursor: pointer;
@@ -123,6 +126,7 @@ const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
                       id === player.id ? undefined : player.id
                     )
                   }
+                  className="player-name"
                 />
                 {playerId === player.id ? (
                   <ManagersContainer home={home}>
@@ -237,6 +241,20 @@ function useFixturesWithPicks() {
 const FixturePicks: React.FC<{}> = (props) => {
   const [playerId, setPlayerId] = React.useState<number>()
   const fixturesWithPicks = useFixturesWithPicks()
+
+  React.useEffect(() => {
+    type HandleClick = Parameters<typeof document.addEventListener>[1]
+    const handleClick: HandleClick = (evt) => {
+      const target = evt.target as Element
+      if (!target || !target.classList.contains("player-name")) {
+        setPlayerId(undefined)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => {
+      document.removeEventListener("mousedown", handleClick)
+    }
+  }, [])
 
   return (
     <Skeleton>

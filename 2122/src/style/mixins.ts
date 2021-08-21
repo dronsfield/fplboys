@@ -23,3 +23,7 @@ export const normalizeButton = `
   font-size: inherit;
   font-family: inherit;
 `
+
+export const removeHighlight = `
+  -webkit-tap-highlight-color: transparent;
+`
