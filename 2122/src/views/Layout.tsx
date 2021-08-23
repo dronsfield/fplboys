@@ -74,6 +74,7 @@ const Layout: React.FC<{}> = (props) => {
           <NavButton children="Info" to="/" />
           <NavButton children="Table" to="/table" />
           <NavButton children="Fixtures" to="/fixtures" />
+          <NavButton children="Captains" to="/captains" />
         </NavButtons>
       </Header>
       {children}

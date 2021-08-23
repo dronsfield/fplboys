@@ -15,7 +15,7 @@ export interface Pot {
   managers: BuyInManager[]
   prizes: Prize[]
 }
-export interface managerWithPrize extends BuyInManager {
+export interface ManagerWithPrize extends BuyInManager {
   prizeValue: number
   profit: number
 }
@@ -25,7 +25,7 @@ export interface PrizeCalculation {
   potManagers: { [buyIn: number]: BuyInManager[] }
   totalPrize: number
   prizes: Prize[]
-  managers: managerWithPrize[]
+  managers: ManagerWithPrize[]
 }
 
 // export const PRIZE_DISTRIBUTIONS: { [k: number]: number[] } = {
@@ -120,7 +120,7 @@ export function calculatePrizes(managers: BuyInManager[]): PrizeCalculation {
   })
   prizes = sortBy(prizes, "value", true)
 
-  const managersWithPrize: managerWithPrize[] = managers.map((manager) => {
+  const managersWithPrize: ManagerWithPrize[] = managers.map((manager) => {
     const prizeValue = totalPrizePerManager[manager.id] || 0
     return { ...manager, prizeValue, profit: prizeValue - manager.buyIn }
   })

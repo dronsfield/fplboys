@@ -5,10 +5,11 @@ import { persistQueryClient } from "react-query/persistQueryClient-experimental"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { LeagueContextProvider } from "./LeagueContext"
 import GlobalStyle from "./style/global"
+import Captains from "./views/Captains"
 import FixturePicks from "./views/FixturePicks"
 import Intro from "./views/Intro"
 import Layout from "./views/Layout"
-import Table from "./views/Table"
+import Table from "./views/LeagueTable"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +38,7 @@ const App: React.FC<{}> = () => {
             <Switch>
               <Route path="/table" component={Table} />
               <Route path="/fixtures" component={FixturePicks} />
+              <Route path="/captains" component={Captains} />
               <Route path="/" component={Intro} />
             </Switch>
           </Layout>

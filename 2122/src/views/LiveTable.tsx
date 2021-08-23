@@ -1,79 +1,24 @@
 import React from "react"
 import Section from "src/components/Section"
+import Table from "src/components/Table"
 import { useLeagueContext } from "src/LeagueContext"
-import colors from "src/style/colors"
 import { normalizeButton } from "src/style/mixins"
 import { formatName } from "src/util/formatName"
 import styled from "styled-components"
-
-const List = styled.ol`
-  margin: 0 -0px;
-  padding: 0;
-  list-style-type: none;
-`
-
-const Item = styled.li`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-  border: 1px solid ${colors.border};
-  padding: 8px 8px;
-  border-top-width: 0;
-
-  &:first-child {
-    border-radius: 5px 5px 0 0;
-    border-top-width: 1px;
-  }
-  &:last-child {
-    border-radius: 0 0 5px 5px;
-  }
-`
-
-const Header = styled(Item)`
-  font-size: 10px;
-  text-transform: uppercase;
-  padding: 8px 8px;
-`
-
-const PointsSpan = styled.span`
-  width: 50px;
-  @media (min-width: 600px) {
-    width: 60px;
-  }
-`
+import Skeleton from "./Skeleton"
 
 const RankSpan = styled.span`
-  display: inline-block;
-  width: 36px;
   opacity: 0.5;
   font-weight: bold;
   font-style: italic;
 `
 
-const ManagerSpan = styled.a`
-  flex: 1;
+const ManagerLink = styled.a`
   text-decoration: none;
 `
 
-const MoneySpan = styled(PointsSpan)<{ color?: string }>`
+const MoneySpan = styled.span<{ color?: string }>`
   ${(p) => (p.color ? `color: ${p.color};` : ``)}
-`
-
-const ProfitSpan = styled(MoneySpan)`
-  width: 60px;
-  @media (min-width: 600px) {
-    width: 75px;
-  }
-`
-
-const DesktopOnlyMoneySpan = styled(MoneySpan)`
-  @media (max-width: 599px) {
-    display: none;
-  }
-  @media (min-width: 600px) {
-    width: 75px;
-  }
 `
 
 function formatMoney(
@@ -125,12 +70,18 @@ const RankModifiers = (props: {
   )
 }
 
-const Table: React.FC<{}> = (props) => {
-  const {
-    prizeCalculation: { managers },
-    setManagers,
-    currentEventId
-  } = useLeagueContext()
+const headers = [
+  "modifiers",
+  "rank",
+  "name",
+  "points",
+  "buyIn",
+  "prizeValue",
+  "profit"
+] as const
+
+const LiveTable: React.FC<{}> = (props) => {
+  const { managers, currentEventId, setManagers } = useLeagueContext()
 
   const getModifierHandlers = (id: number) => {
     const getModifierHandler = (up?: boolean) => {
@@ -160,47 +111,70 @@ const Table: React.FC<{}> = (props) => {
     return { up: getModifierHandler(true), down: getModifierHandler(false) }
   }
 
-  if (managers && managers.length) {
-    return (
+  return (
+    <Skeleton>
       <Section>
-        <List>
-          <Header>
-            <RankModifiers />
-            <RankSpan children="" />
-            <ManagerSpan children="Name" />
-            <PointsSpan children="Points" />
-            <MoneySpan children="Buy-in" />
-            <DesktopOnlyMoneySpan children="Prize" />
-            <ProfitSpan children="Profit" />
-          </Header>
-          {managers.map((manager) => {
-            return (
-              <Item key={manager.id}>
-                <RankModifiers
-                  modifierHandlers={getModifierHandlers(manager.id)}
-                />
-                <RankSpan children={`#${manager.rank}`} />
-                <ManagerSpan
-                  children={formatName(manager.name)}
-                  href={`https://fantasy.premierleague.com/entry/${manager.id}/event/${currentEventId}`}
-                />
-                <PointsSpan children={manager.totalPoints} />
-                <MoneySpan {...formatMoney(manager.buyIn)} />
-                <DesktopOnlyMoneySpan {...formatMoney(manager.prizeValue)} />
-                <ProfitSpan {...formatMoney(manager.profit, true)} />
-              </Item>
-            )
-          })}
-        </List>
+        <Table
+          data={managers}
+          headers={headers}
+          renderHeader={(header) => {
+            switch (header) {
+              case "modifiers":
+                return null
+              case "rank":
+                return null
+              case "name":
+                return "Name"
+              case "points":
+                return "Points"
+              case "buyIn":
+                return "Buy-in"
+              case "prizeValue":
+                return "Prize"
+              case "profit":
+                return "Profit"
+            }
+          }}
+          renderCell={(header, manager) => {
+            switch (header) {
+              case "modifiers":
+                return (
+                  <RankModifiers
+                    modifierHandlers={getModifierHandlers(manager.id)}
+                  />
+                )
+              case "rank":
+                return <RankSpan children={`#${manager.rank}`} />
+              case "name":
+                return (
+                  <ManagerLink
+                    children={formatName(manager.name)}
+                    href={`https://fantasy.premierleague.com/entry/${manager.id}/event/${currentEventId}`}
+                  />
+                )
+              case "points":
+                return manager.totalPoints
+              case "buyIn":
+                return <MoneySpan {...formatMoney(manager.buyIn)} />
+              case "prizeValue":
+                return <MoneySpan {...formatMoney(manager.prizeValue)} />
+              case "profit":
+                return <MoneySpan {...formatMoney(manager.profit, true)} />
+            }
+          }}
+          cellWidths={{
+            modifiers: [30],
+            rank: [36],
+            name: ["auto"],
+            points: [50, 60],
+            buyIn: [50, 60],
+            prizeValue: ["hide", 75],
+            profit: [60, 75]
+          }}
+        />
       </Section>
-    )
-    // } else if (isLoading) {
-    //   return <Section children="Loading" />
-    // } else if (error) {
-    //   return <Section children="Error" />
-  } else {
-    return null
-  }
+    </Skeleton>
+  )
 }
 
-export default Table
+export default LiveTable
