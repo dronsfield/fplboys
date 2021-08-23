@@ -27,7 +27,7 @@ const Row = styled.tr`
 
 const HeaderRow = styled(Row)``
 
-type CellWidth = number | "hide" | "auto"
+type CellWidth = number | "hide" | "auto" | "nowrap"
 type CellWidths = [CellWidth] | [CellWidth, CellWidth]
 
 interface CellProps {
@@ -35,12 +35,12 @@ interface CellProps {
 }
 
 function makeCellWidthStyle(cellWidth: CellWidth) {
-  const widthValue =
-    cellWidth === "hide" ? 0 : cellWidth === "auto" ? "auto" : cellWidth + "px"
+  const widthValue = typeof cellWidth === "number" ? cellWidth + "px" : "auto"
   const style = `
     display: ${cellWidth === "hide" ? "none" : "table-cell"};
     width: ${widthValue};
     min-width: ${widthValue};
+    ${cellWidth === "nowrap" ? `white-space: nowrap;` : ""}
   `
   return style
 }
@@ -58,7 +58,7 @@ const cellStyle = css<CellProps>`
   }
   `}
   box-sizing: content-box;
-  padding: 8px 0;
+  padding: 8px 4px;
   &:first-child {
     padding-left: 8px;
   }
@@ -138,4 +138,9 @@ Object.assign(Table, {
   HeaderCell
 })
 
-export default Table
+export default React.memo(Table) as <
+  RowData extends object,
+  Headers extends readonly string[]
+>(
+  props: TableProps<RowData, Headers>
+) => React.ReactElement

@@ -178,7 +178,8 @@ const Table: React.FC<{}> = (props) => {
       rank: 0,
       teamName: name,
       totalPoints: 0,
-      picks: []
+      picks: [],
+      transfers: { in: [], out: [] }
     }
     setManagers((originalManagers) => {
       const managers = [...originalManagers]

@@ -96,6 +96,16 @@ const GameweekRT = Record({
 })
 type GameweekRT = Static<typeof GameweekRT>
 
+const TransferRT = Record({
+  element_in: Number,
+  element_in_cost: Number,
+  element_out: Number,
+  element_out_cost: Number,
+  entry: Number,
+  event: Number
+})
+type TransferRT = Static<typeof TransferRT>
+
 const StatRT = Record({ value: Number, element: Number })
 const FixtureRT = Record({
   id: Number,
@@ -123,6 +133,10 @@ export function fetchGameweek(opts: { teamId: number; eventId: number }) {
   const url = `${BASE_URL}/entry/${opts.teamId}/event/${opts.eventId}/picks/`
   return runtypeFetch(GameweekRT, url)
 }
+export function fetchTransfers(opts: { teamId: number }) {
+  const url = `${BASE_URL}/entry/${opts.teamId}/transfers/`
+  return runtypeFetch(Array(TransferRT), url)
+}
 export function fetchFixtures(opts: { eventId: number }) {
   const url = `${BASE_URL}/fixtures/?event=${opts.eventId}`
   console.log({ url })
@@ -147,6 +161,11 @@ export interface Team {
 }
 export type Teams = { [id: number]: Team }
 
+export interface GameweekTransfers {
+  in: number[]
+  out: number[]
+}
+
 export type PickType = "STARTING" | "BENCHED" | "CAPTAIN" | "VICE"
 export interface Manager {
   id: number
@@ -157,6 +176,10 @@ export interface Manager {
   picks: {
     [id: number]: PickType
   }
+  transfers: {
+    in: number[]
+    out: number[]
+  }
 }
 export interface League {
   id: number
@@ -165,7 +188,6 @@ export interface League {
 }
 
 export interface FixtureTeam {
-  // goals: Array<{ }
   teamId: number
   team: Team
   score: number | null
@@ -241,6 +263,20 @@ function parseFixture(fixture: FixtureRT, teams: Teams): Fixture {
     }
   }
 }
+function parseGameweekTransfers(
+  allTransfers: TransferRT[],
+  currentEventId: number
+): GameweekTransfers {
+  const transfers: GameweekTransfers = {
+    in: [],
+    out: []
+  }
+  allTransfers.map((transferPayload) => {
+    transfers.in.push(transferPayload.element_in)
+    transfers.out.push(transferPayload.element_out)
+  })
+  return transfers
+}
 
 export async function init() {
   const bootstrap = await fetchBootstrap()
@@ -278,21 +314,32 @@ export async function getLeague(
   } = league
   const managers = await Promise.all(
     results.map(async (result) => {
-      const gw = await fetchGameweek({
-        teamId: result.entry,
-        eventId: currentEventId
-      })
+      const [gw, transfersResponse] = await Promise.all([
+        fetchGameweek({
+          teamId: result.entry,
+          eventId: currentEventId
+        }),
+        fetchTransfers({ teamId: result.entry })
+      ])
+
       const picks = gw.picks.reduce((acc, pick) => {
         acc[pick.element] = getPickType(pick)
         return acc
       }, {} as Manager["picks"])
+
+      const transfers = parseGameweekTransfers(
+        transfersResponse,
+        currentEventId
+      )
+
       const manager: Manager = {
         id: result.entry,
         name: result.player_name,
         teamName: result.entry_name,
         rank: result.rank,
         totalPoints: result.total,
-        picks
+        picks,
+        transfers
       }
       return manager
     })

@@ -7,7 +7,7 @@ import styled from "styled-components"
 const Header = styled.nav`
   width: 100%;
   background-color: ${colors.purple};
-  padding: 10px;
+  padding: 10px 0 6px;
 `
 
 const Banner = styled.div`
@@ -40,7 +40,7 @@ const NavButton = styled(CustomLink)`
   text-transform: uppercase;
   padding: 5px 7px;
   border-radius: 8px;
-  margin: 0 4px;
+  margin: 3px 3px;
   color: white;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.2);
@@ -69,12 +69,15 @@ const Layout: React.FC<{}> = (props) => {
         <Banner>
           <Title children="F P L B O Y S" />
         </Banner>
-        <Spacer height={8} />
+        <Spacer height={5} />
         <NavButtons>
           <NavButton children="Info" to="/" />
           <NavButton children="Table" to="/table" />
           <NavButton children="Fixtures" to="/fixtures" />
+        </NavButtons>
+        <NavButtons>
           <NavButton children="Captains" to="/captains" />
+          <NavButton children="Transfers" to="/transfers" />
         </NavButtons>
       </Header>
       {children}

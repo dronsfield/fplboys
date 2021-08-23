@@ -163,13 +163,13 @@ const LiveTable: React.FC<{}> = (props) => {
             }
           }}
           cellWidths={{
-            modifiers: [30],
-            rank: [36],
+            modifiers: [22],
+            rank: [28],
             name: ["auto"],
-            points: [50, 60],
-            buyIn: [50, 60],
-            prizeValue: ["hide", 75],
-            profit: [60, 75]
+            points: [40, 50],
+            buyIn: [40, 50],
+            prizeValue: ["hide", 70],
+            profit: [55, 70]
           }}
         />
       </Section>

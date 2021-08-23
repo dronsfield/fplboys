@@ -14,6 +14,7 @@
     "@types/styled-components": "^5.1.5",
     "@types/testing-library__jest-dom": "^5.9.5",
     "change-case": "^4.1.2",
+    "dayjs": "^1.10.6",
     "formik": "^2.2.9",
     "husky": "^4.2.5",
     "prettier": "^2.2.1",

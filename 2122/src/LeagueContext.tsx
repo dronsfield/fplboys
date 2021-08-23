@@ -25,6 +25,8 @@ interface LeagueContextType {
   currentEventId: number
   isSuccess: boolean
   isError: boolean
+  isFetching: boolean
+  dataUpdatedAt?: number
 }
 
 const defaultValue: LeagueContextType = {
@@ -43,7 +45,8 @@ const defaultValue: LeagueContextType = {
   fixtures: [],
   currentEventId: 1,
   isSuccess: false,
-  isError: false
+  isError: false,
+  isFetching: false
 }
 
 export const LeagueContext =
@@ -62,9 +65,9 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
     return calculatePrizes(managers)
   }, [managers])
 
-  const { data: initData } = useInitQuery()
+  const { data: initData, ...initRest } = useInitQuery()
 
-  const { data: leagueData, isSuccess, isError } = useGetLeagueQuery()
+  const { data: leagueData, dataUpdatedAt, ...leagueRest } = useGetLeagueQuery()
   React.useEffect(() => {
     if (leagueData) {
       const managers = leagueData.managers.map((manager) => {
@@ -89,9 +92,13 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
     managers: prizeCalculation.managers,
     setManagers,
     prizeCalculation,
-    isSuccess,
-    isError
+    isSuccess: initRest.isSuccess && leagueRest.isSuccess,
+    isError: initRest.isError || leagueRest.isError,
+    isFetching: initRest.isFetching || leagueRest.isFetching,
+    dataUpdatedAt
   }
+
+  console.log(initRest, leagueRest)
 
   return <LeagueContext.Provider value={contextValue} children={children} />
 }
