@@ -1,8 +1,8 @@
 import React from "react"
+import { ManagerCell } from "src/components/CommonCells"
 import Section from "src/components/Section"
 import Table from "src/components/Table"
 import { useLeagueContext } from "src/LeagueContext"
-import { formatName } from "src/util/formatName"
 import Skeleton from "./Skeleton"
 
 const headers = ["name", "captain", "vice"] as const
@@ -22,7 +22,8 @@ const Captains: React.FC<{}> = (props) => {
         if (pickType === "VICE") viceId = playerId
       })
       return {
-        name: formatName(manager.name),
+        // name: formatName(manager.name),
+        manager,
         captain: players[captainId]?.webName,
         vice: players[viceId]?.webName
       }
@@ -36,7 +37,16 @@ const Captains: React.FC<{}> = (props) => {
           data={data}
           headers={headers}
           renderCell={(header, rowData) => {
-            return rowData[header]
+            if (header === "name") {
+              return (
+                <ManagerCell
+                  manager={rowData.manager}
+                  currentEventId={currentEventId}
+                />
+              )
+            } else {
+              return rowData[header]
+            }
           }}
           cellWidths={{
             name: ["auto"],

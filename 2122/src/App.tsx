@@ -11,6 +11,7 @@ import FixturePicks from "./views/FixturePicks"
 import Intro from "./views/Intro"
 import Layout from "./views/Layout"
 import Table from "./views/LeagueTable"
+import TemplateTeam from "./views/TemplateTeam"
 import Transfers from "./views/Transfers"
 
 const queryClient = new QueryClient({
@@ -45,6 +46,7 @@ const App: React.FC<{}> = () => {
               <Route path="/fixtures" component={FixturePicks} />
               <Route path="/captains" component={Captains} />
               <Route path="/transfers" component={Transfers} />
+              <Route path="/template" component={TemplateTeam} />
               <Route path="/" component={Intro} />
             </Switch>
           </Layout>

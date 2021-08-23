@@ -13,6 +13,7 @@ import {
 } from "runtypes"
 import appConfig from "src/appConfig"
 import { keyBy } from "src/util/keyBy"
+import { ItemsOf } from "src/util/utilityTypes"
 import betterFetch from "../util/betterFetch"
 
 // NB: If you're trying to add more endpoints and you get a confusing error -
@@ -41,7 +42,9 @@ const ElementRT = Record({
   web_name: String,
   team: Number,
   team_code: Number,
-  selected_by_percent: String
+  selected_by_percent: String,
+  element_type: Number,
+  now_cost: Number
 })
 type ElementRT = Static<typeof ElementRT>
 
@@ -139,10 +142,11 @@ export function fetchTransfers(opts: { teamId: number }) {
 }
 export function fetchFixtures(opts: { eventId: number }) {
   const url = `${BASE_URL}/fixtures/?event=${opts.eventId}`
-  console.log({ url })
   return runtypeFetch(Array(FixtureRT), url)
 }
 
+export const playerPositions = ["GKP", "DEF", "MID", "FWD"] as const
+export type PlayerPosition = ItemsOf<typeof playerPositions> | "???"
 export interface Player {
   id: number
   firstName: string
@@ -151,6 +155,8 @@ export interface Player {
   teamId: number
   teamCode: number
   selectedBy: string
+  position: PlayerPosition
+  cost: number
 }
 export type Players = { [id: number]: Player }
 export interface Team {
@@ -217,8 +223,12 @@ function parsePlayerFromElement(element: ElementRT): Player {
     second_name,
     team,
     team_code,
-    selected_by_percent
+    selected_by_percent,
+    element_type,
+    now_cost
   } = element
+  const position = playerPositions[element_type - 1] || "???"
+  const cost = 0.1 * now_cost
   return {
     id,
     firstName: first_name,
@@ -226,7 +236,9 @@ function parsePlayerFromElement(element: ElementRT): Player {
     webName: web_name,
     teamId: team,
     teamCode: team_code,
-    selectedBy: selected_by_percent
+    selectedBy: selected_by_percent,
+    position,
+    cost
   }
 }
 function parseTeam(team: TeamRT): Team {
@@ -289,7 +301,6 @@ export async function init() {
   const fixtures = fixturesResponse.map((fixture) =>
     parseFixture(fixture, teams)
   )
-  console.log({ players, teams, currentEventId, fixtures })
   return { players, teams, currentEventId, fixtures }
 }
 

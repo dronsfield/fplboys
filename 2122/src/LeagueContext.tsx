@@ -74,11 +74,7 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
         const buyInLookupValue = buyInsById[String(manager.id)]
         const buyIn = buyInLookupValue || 0
         if (!buyInLookupValue) {
-          if (buyInLookupValue === 0) {
-            console.log(`${manager.name} still hasn't paid`)
-          } else {
-            console.log(`whomst is ${manager.name} ??`)
-          }
+          console.log(`${manager.name} still hasn't paid`)
         }
         return { ...manager, buyIn }
       })
@@ -97,8 +93,6 @@ export const LeagueContextProvider: React.FC<{}> = (props) => {
     isFetching: initRest.isFetching || leagueRest.isFetching,
     dataUpdatedAt
   }
-
-  console.log(initRest, leagueRest)
 
   return <LeagueContext.Provider value={contextValue} children={children} />
 }

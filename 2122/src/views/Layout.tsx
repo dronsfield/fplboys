@@ -72,10 +72,11 @@ const Layout: React.FC<{}> = (props) => {
         <Spacer height={5} />
         <NavButtons>
           <NavButton children="Info" to="/" />
-          <NavButton children="Table" to="/table" />
-          <NavButton children="Fixtures" to="/fixtures" />
+          <NavButton children="Prizes" to="/table" />
+          <NavButton children="Template" to="/template" />
         </NavButtons>
         <NavButtons>
+          <NavButton children="Fixtures" to="/fixtures" />
           <NavButton children="Captains" to="/captains" />
           <NavButton children="Transfers" to="/transfers" />
         </NavButtons>

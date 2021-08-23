@@ -1,9 +1,9 @@
 import React from "react"
+import { ManagerCell, MoneyCell } from "src/components/CommonCells"
 import Section from "src/components/Section"
 import Table from "src/components/Table"
 import { useLeagueContext } from "src/LeagueContext"
 import { normalizeButton } from "src/style/mixins"
-import { formatName } from "src/util/formatName"
 import styled from "styled-components"
 import Skeleton from "./Skeleton"
 
@@ -147,19 +147,19 @@ const LiveTable: React.FC<{}> = (props) => {
                 return <RankSpan children={`#${manager.rank}`} />
               case "name":
                 return (
-                  <ManagerLink
-                    children={formatName(manager.name)}
-                    href={`https://fantasy.premierleague.com/entry/${manager.id}/event/${currentEventId}`}
+                  <ManagerCell
+                    manager={manager}
+                    currentEventId={currentEventId}
                   />
                 )
               case "points":
                 return manager.totalPoints
               case "buyIn":
-                return <MoneySpan {...formatMoney(manager.buyIn)} />
+                return <MoneyCell value={manager.buyIn} />
               case "prizeValue":
-                return <MoneySpan {...formatMoney(manager.prizeValue)} />
+                return <MoneyCell value={manager.prizeValue} />
               case "profit":
-                return <MoneySpan {...formatMoney(manager.profit, true)} />
+                return <MoneyCell value={manager.prizeValue} showProfit />
             }
           }}
           cellWidths={{
