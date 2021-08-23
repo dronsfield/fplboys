@@ -75,7 +75,7 @@
     "name": "Max  CC",
     "id": "5333256",
     "buyIn": 5,
-    "datePaid": ""
+    "datePaid": "2021-08-22"
   },
   {
     "name": "Noah Baker",
@@ -94,5 +94,11 @@
     "id": "1914967",
     "buyIn": 20,
     "datePaid": "2021-08-20"
+  },
+  {
+    "name": "Pearce Finnemore",
+    "id": "1372644",
+    "buyIn": 5,
+    "datePaid": "2021-08-21"
   }
 ]
