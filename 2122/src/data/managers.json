@@ -69,7 +69,7 @@
     "name": "Oscar  K",
     "id": "4450189",
     "buyIn": 20,
-    "datePaid": ""
+    "datePaid": "2021-08-27"
   },
   {
     "name": "Max  CC",
@@ -100,5 +100,11 @@
     "id": "1372644",
     "buyIn": 5,
     "datePaid": "2021-08-21"
+  },
+  {
+    "name": "Sam  Raynes",
+    "id": "1866564",
+    "buyIn": 10,
+    "datePaid": "2021-08-27"
   }
 ]
