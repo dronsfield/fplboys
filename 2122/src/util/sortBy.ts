@@ -55,9 +55,10 @@ export function sortBy<T>(
     valueTransform: valueTransformProp
   } = opts || {}
   const valueTransform =
-    valueTransformProp || castLower
+    valueTransformProp ||
+    (castLower
       ? (x: T[keyof T]) => (typeof x === "string" ? x.toLowerCase() : x)
-      : (x: T[keyof T]) => x
+      : (x: T[keyof T]) => x)
 
   const compare = compareFactory({ prop, desc, valueTransform, secondaryProp })
 

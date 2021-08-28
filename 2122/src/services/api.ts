@@ -95,6 +95,9 @@ const PickRT = Record({
 type PickRT = Static<typeof PickRT>
 
 const GameweekRT = Record({
+  entry_history: Record({
+    points: Number
+  }),
   picks: Array(PickRT)
 })
 type GameweekRT = Static<typeof GameweekRT>
@@ -113,6 +116,8 @@ const StatRT = Record({ value: Number, element: Number })
 const FixtureRT = Record({
   id: Number,
   kickoff_time: String,
+  finished_provisional: Boolean,
+  started: Boolean,
   stats: Array(
     Record({ identifier: String, a: Array(StatRT), h: Array(StatRT) })
   ),
@@ -179,6 +184,7 @@ export interface Manager {
   teamName: string
   rank: number
   totalPoints: number
+  eventPoints: number
   picks: {
     [id: number]: PickType
   }
@@ -201,6 +207,8 @@ export interface FixtureTeam {
 export interface Fixture {
   id: number
   kickoffTime: string
+  started: boolean
+  finished: boolean
   home: FixtureTeam
   away: FixtureTeam
 }
@@ -258,11 +266,15 @@ function parseFixture(fixture: FixtureRT, teams: Teams): Fixture {
     team_h,
     team_h_score,
     team_a,
-    team_a_score
+    team_a_score,
+    started,
+    finished_provisional
   } = fixture
   return {
     id,
     kickoffTime: kickoff_time,
+    started,
+    finished: finished_provisional,
     home: {
       teamId: team_h,
       team: teams[team_h],
@@ -349,6 +361,7 @@ export async function getLeague(
         teamName: result.entry_name,
         rank: result.rank,
         totalPoints: result.total,
+        eventPoints: gw.entry_history.points,
         picks,
         transfers
       }

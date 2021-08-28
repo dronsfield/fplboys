@@ -144,8 +144,6 @@ const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
                           children={formatName(name) + suffix}
                           key={id}
                           pickType={pickType}
-                          // benched={pickType === "BENCHED"}
-                          // captain={pickType === "CAPTAIN"}
                         />
                       )
                     })}
