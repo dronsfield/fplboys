@@ -159,7 +159,7 @@ const LiveTable: React.FC<{}> = (props) => {
               case "prizeValue":
                 return <MoneyCell value={manager.prizeValue} />
               case "profit":
-                return <MoneyCell value={manager.prizeValue} showProfit />
+                return <MoneyCell value={manager.profit} showProfit />
             }
           }}
           cellWidths={{
