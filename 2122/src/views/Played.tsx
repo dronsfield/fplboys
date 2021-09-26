@@ -149,11 +149,11 @@ const Played: React.FC<{}> = (props) => {
               case "points":
                 return "Pts"
               case "finishedCount":
-                return "P."
+                return "P"
               case "inPlayCount":
-                return "I-P."
+                return "I-P"
               case "notStartedCount":
-                return "LTP."
+                return "LTP"
               case "notFinished":
                 return ""
             }

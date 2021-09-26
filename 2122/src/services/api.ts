@@ -295,10 +295,13 @@ function parseGameweekTransfers(
     in: [],
     out: []
   }
-  allTransfers.map((transferPayload) => {
-    transfers.in.push(transferPayload.element_in)
-    transfers.out.push(transferPayload.element_out)
-  })
+  console.log({ allTransfers, currentEventId })
+  allTransfers
+    .filter((transferPayload) => transferPayload.event === currentEventId)
+    .map((transferPayload) => {
+      transfers.in.push(transferPayload.element_in)
+      transfers.out.push(transferPayload.element_out)
+    })
   return transfers
 }
 
