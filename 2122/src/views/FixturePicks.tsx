@@ -1,6 +1,7 @@
 import React from "react"
 import Section from "src/components/Section"
 import Spacer from "src/components/Spacer"
+import goalIcon from "src/images/goal.svg"
 import { useLeagueContext } from "src/LeagueContext"
 import { Fixture, FixtureTeam, PickType, Player } from "src/services/api"
 import colors from "src/style/colors"
@@ -50,8 +51,10 @@ const Score = styled.div`
   font-family: monospace;
 `
 
-const PlayerContainer = styled.div`
+const PlayerContainer = styled.div<{ alignRight?: boolean }>`
   position: relative;
+  display: flex;
+  flex-direction: ${(p) => (p.alignRight ? "row-reverse" : "row")};
 `
 
 const PlayerName = styled.button`
@@ -83,6 +86,15 @@ const ManagerName = styled.div<{ pickType: PickType }>`
   ${(p) => (p.pickType === "CAPTAIN" ? "font-weight: bold;" : "")}
 `
 
+const PlayerEventIcon = styled.img`
+  display: inline-block;
+  margin: 0 5px;
+`
+
+interface PlayerStats {
+  [identifier: string]: number
+}
+
 interface TeamPick {
   player: Player
   picks: Array<{
@@ -90,17 +102,27 @@ interface TeamPick {
     pickType: PickType
   }>
 }
-interface FixtureTeamWithPicks extends FixtureTeam {
-  picks: TeamPick[]
+interface FixtureTeamWithPicksAndStats extends FixtureTeam {
+  picks: (TeamPick & { playerStats: PlayerStats })[]
 }
 interface FixtureWithPicks extends Fixture {
-  home: FixtureTeamWithPicks
-  away: FixtureTeamWithPicks
+  home: FixtureTeamWithPicksAndStats
+  away: FixtureTeamWithPicksAndStats
 }
 
-const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
-  props
-) => {
+const PlayerStatIcons: React.FC<{ playerStats: PlayerStats }> = (props) => {
+  const { playerStats } = props
+  if (playerStats.goals_scored) {
+    return <PlayerEventIcon src={goalIcon} />
+  } else {
+    return null
+  }
+}
+
+const TeamPicks: React.FC<{
+  team: FixtureTeamWithPicksAndStats
+  home?: boolean
+}> = (props) => {
   const { team, home = false } = props
   const { playerId, setPlayerId } = React.useContext(StateContext)
   return (
@@ -114,10 +136,11 @@ const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
       <Row flexEnd={home}>
         <div>
           {team.picks.map((pick) => {
-            const { player, picks } = pick
+            const { player, picks, playerStats } = pick
+            console.log(player.webName, playerStats)
             const text = `${player.webName} x${picks.length}`
             return (
-              <PlayerContainer>
+              <PlayerContainer alignRight={home}>
                 <PlayerName
                   key={player.id}
                   children={text}
@@ -128,6 +151,7 @@ const TeamPicks: React.FC<{ team: FixtureTeamWithPicks; home?: boolean }> = (
                   }
                   className="player-name"
                 />
+                <PlayerStatIcons playerStats={playerStats} />
                 {playerId === player.id ? (
                   <ManagersContainer home={home}>
                     {picks.map((pick) => {
@@ -176,6 +200,7 @@ function useFixturesWithPicks() {
     managers.forEach((manager) => {
       const { picks } = manager
       const pickedPlayerIds: number[] = Object.keys(picks).map(Number)
+
       pickedPlayerIds.forEach((playerId) => {
         const player = players[playerId]
         if (!player) return
@@ -205,7 +230,7 @@ function useFixturesWithPicks() {
     })
     function addPicksToFixtureTeam(
       fixtureTeam: FixtureTeam
-    ): FixtureTeamWithPicks {
+    ): FixtureTeamWithPicksAndStats {
       const teamId = fixtureTeam.teamId
       const teamPicks = Object.values(picksByTeam[teamId] || {}).map((pick) => {
         const { player, picks } = pick
@@ -215,8 +240,19 @@ function useFixturesWithPicks() {
         }))
         const sortedPicks = sortBy(picksWithManagerRank, "managerRank")
         const managerQuantity = picks.length
+
+        const playerStats: PlayerStats = {}
+        const statIdentifiers = Object.keys(fixtureTeam.stats)
+        statIdentifiers.forEach((identifier) => {
+          const playerValue = fixtureTeam.stats[identifier].filter(
+            (stat) => stat.element === player.id
+          )[0]?.value
+          if (playerValue) playerStats[identifier] = playerValue
+        })
+
         return {
           player,
+          playerStats,
           picks: sortedPicks,
           managerQuantity
         }

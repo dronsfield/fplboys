@@ -203,6 +203,9 @@ export interface FixtureTeam {
   teamId: number
   team: Team
   score: number | null
+  stats: {
+    [identifier: string]: { value: number; element: number }[]
+  }
 }
 export interface Fixture {
   id: number
@@ -270,6 +273,13 @@ function parseFixture(fixture: FixtureRT, teams: Teams): Fixture {
     started,
     finished_provisional
   } = fixture
+  const homeStats: FixtureTeam["stats"] = {}
+  const awayStats: FixtureTeam["stats"] = {}
+  stats.forEach((stat) => {
+    const { identifier, a, h } = stat
+    homeStats[identifier] = h
+    awayStats[identifier] = a
+  })
   return {
     id,
     kickoffTime: kickoff_time,
@@ -278,12 +288,14 @@ function parseFixture(fixture: FixtureRT, teams: Teams): Fixture {
     home: {
       teamId: team_h,
       team: teams[team_h],
-      score: team_h_score
+      score: team_h_score,
+      stats: homeStats
     },
     away: {
       teamId: team_a,
       team: teams[team_a],
-      score: team_a_score
+      score: team_a_score,
+      stats: awayStats
     }
   }
 }
@@ -295,7 +307,6 @@ function parseGameweekTransfers(
     in: [],
     out: []
   }
-  console.log({ allTransfers, currentEventId })
   allTransfers
     .filter((transferPayload) => transferPayload.event === currentEventId)
     .map((transferPayload) => {
