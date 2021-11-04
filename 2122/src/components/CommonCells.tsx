@@ -11,31 +11,34 @@ const MoneySpan = styled.span<{ color?: string }>`
 
 function formatMoney(
   value: number,
-  showsProfit?: boolean
+  opts?: { showSign?: boolean; showColor?: boolean }
 ): { children: string; color?: string } {
+  const { showSign, showColor } = opts || {}
   const absValue = Math.abs(value)
   const absText = Number.isInteger(absValue)
     ? absValue.toFixed(0)
     : absValue.toFixed(2)
   if (value > 0) {
-    const prefix = showsProfit ? "+" : ""
+    const prefix = showSign ? "+" : ""
     return {
       children: `${prefix}£${absText}`,
-      color: showsProfit ? "green" : undefined
+      color: showColor ? "green" : undefined
     }
   } else if (value === 0) {
-    const prefix = showsProfit ? "±" : ""
+    const prefix = showSign ? "±" : ""
     return { children: `${prefix}£${absText}`, color: "#bbb" }
   } else {
     return { children: `-£${absText}`, color: "#bbb" }
   }
 }
 
-export const MoneyCell: React.FC<{ showProfit?: boolean; value: number }> = (
-  props
-) => {
-  const { showProfit, value } = props
-  return <MoneySpan {...formatMoney(value, showProfit)} />
+export const MoneyCell: React.FC<{
+  showSign?: boolean
+  showColor?: boolean
+  value: number
+}> = (props) => {
+  const { showSign, showColor, value } = props
+  return <MoneySpan {...formatMoney(value, { showSign, showColor })} />
 }
 
 // MANAGER

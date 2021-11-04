@@ -137,12 +137,12 @@ const LiveTable: React.FC<{}> = (props) => {
           }}
           renderCell={(header, manager) => {
             switch (header) {
-              case "modifiers":
-                return (
-                  <RankModifiers
-                    modifierHandlers={getModifierHandlers(manager.id)}
-                  />
-                )
+              // case "modifiers":
+              //   return (
+              //     <RankModifiers
+              //       modifierHandlers={getModifierHandlers(manager.id)}
+              //     />
+              //   )
               case "rank":
                 return <RankSpan children={`#${manager.rank}`} />
               case "name":
@@ -157,19 +157,20 @@ const LiveTable: React.FC<{}> = (props) => {
               case "buyIn":
                 return <MoneyCell value={manager.buyIn} />
               case "prizeValue":
-                return <MoneyCell value={manager.prizeValue} />
+                return <MoneyCell value={manager.prizeValue} showColor />
               case "profit":
-                return <MoneyCell value={manager.profit} showProfit />
+                return <MoneyCell value={manager.profit} showColor showSign />
             }
           }}
           cellWidths={{
-            modifiers: [22],
+            // modifiers: [22],
+            modifiers: [0],
             rank: [28],
             name: ["auto"],
             points: [40, 50],
             buyIn: [40, 50],
-            prizeValue: ["hide", 70],
-            profit: [55, 70]
+            prizeValue: [55, 70],
+            profit: ["hide", 70]
           }}
         />
       </Section>
