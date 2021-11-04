@@ -11,6 +11,11 @@ const SectionOuter = styled.div`
 const SectionInner = styled.div`
   margin: 0 auto;
   max-width: 500px;
+
+  p {
+    margin-left: 9px;
+    margin-right: 9px;
+  }
 `
 
 const Section: React.FC<{}> = (props) => {

@@ -166,7 +166,6 @@ const TeamPicks: React.FC<{
         <div>
           {team.picks.map((pick) => {
             const { player, picks, playerStats } = pick
-            console.log(player.webName, playerStats)
             const text = `${player.webName} x${picks.length}`
             return (
               <PlayerContainer alignRight={home}>
