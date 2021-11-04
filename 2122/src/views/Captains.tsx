@@ -5,7 +5,7 @@ import Table from "src/components/Table"
 import { useLeagueContext } from "src/LeagueContext"
 import Skeleton from "./Skeleton"
 
-const headers = ["name", "captain", "vice"] as const
+const headers = ["manager", "captain", "vice"] as const
 
 const Captains: React.FC<{}> = (props) => {
   const { managers, currentEventId, setManagers, players } = useLeagueContext()
@@ -37,7 +37,7 @@ const Captains: React.FC<{}> = (props) => {
           data={data}
           headers={headers}
           renderCell={(header, rowData) => {
-            if (header === "name") {
+            if (header === "manager") {
               return (
                 <ManagerCell
                   manager={rowData.manager}
@@ -49,7 +49,7 @@ const Captains: React.FC<{}> = (props) => {
             }
           }}
           cellWidths={{
-            name: ["auto"],
+            manager: ["auto"],
             captain: ["auto"],
             vice: ["auto"]
           }}

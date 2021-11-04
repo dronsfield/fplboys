@@ -73,7 +73,7 @@ const RankModifiers = (props: {
 const headers = [
   "modifiers",
   "rank",
-  "name",
+  "manager",
   "points",
   "buyIn",
   "prizeValue",
@@ -123,7 +123,7 @@ const LiveTable: React.FC<{}> = (props) => {
                 return null
               case "rank":
                 return null
-              case "name":
+              case "manager":
                 return "Name"
               case "points":
                 return "Points"
@@ -145,7 +145,7 @@ const LiveTable: React.FC<{}> = (props) => {
               //   )
               case "rank":
                 return <RankSpan children={`#${manager.rank}`} />
-              case "name":
+              case "manager":
                 return (
                   <ManagerCell
                     manager={manager}
@@ -166,7 +166,7 @@ const LiveTable: React.FC<{}> = (props) => {
             // modifiers: [22],
             modifiers: [0],
             rank: [28],
-            name: ["auto"],
+            manager: ["auto"],
             points: [40, 50],
             buyIn: [40, 50],
             prizeValue: [55, 70],

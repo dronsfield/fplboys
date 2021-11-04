@@ -11,7 +11,7 @@ import styled from "styled-components"
 import Skeleton from "./Skeleton"
 
 const headers = [
-  "name",
+  "manager",
   "points",
   "finishedCount",
   "inPlayCount",
@@ -116,7 +116,7 @@ const Played: React.FC<{}> = (props) => {
           data={data}
           headers={headers}
           renderCell={(header, rowData) => {
-            if (header === "name") {
+            if (header === "manager") {
               return (
                 <ManagerCell
                   manager={rowData.manager}
@@ -144,8 +144,8 @@ const Played: React.FC<{}> = (props) => {
           }}
           renderHeader={(header) => {
             switch (header) {
-              case "name":
-                return "Name"
+              case "manager":
+                return "Manager"
               case "points":
                 return "Pts"
               case "finishedCount":
@@ -159,7 +159,7 @@ const Played: React.FC<{}> = (props) => {
             }
           }}
           cellWidths={{
-            name: ["nowrap"],
+            manager: ["nowrap"],
             points: ["nowrap"],
             finishedCount: ["nowrap"],
             inPlayCount: ["nowrap"],
