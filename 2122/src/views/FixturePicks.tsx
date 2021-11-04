@@ -1,7 +1,10 @@
 import React from "react"
 import Section from "src/components/Section"
 import Spacer from "src/components/Spacer"
+import assistIcon from "src/images/assist.svg"
 import goalIcon from "src/images/goal.svg"
+import redCardIcon from "src/images/red-card.svg"
+import yellowCardIcon from "src/images/yellow-card.svg"
 import { useLeagueContext } from "src/LeagueContext"
 import { Fixture, FixtureTeam, PickType, Player } from "src/services/api"
 import colors from "src/style/colors"
@@ -85,10 +88,16 @@ const ManagerName = styled.div<{ pickType: PickType }>`
   ${(p) => (p.pickType === "BENCHED" ? "opacity: 0.5;" : "")}
   ${(p) => (p.pickType === "CAPTAIN" ? "font-weight: bold;" : "")}
 `
-
-const PlayerEventIcon = styled.img`
+const PlayerStatIconsWrapper = styled.div`
+  margin: 0 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: middle;
+`
+const PlayerStatIcon = styled.img`
   display: inline-block;
-  margin: 0 5px;
+  margin: 0 1px;
+  color: ${colors.purple};
 `
 
 interface PlayerStats {
@@ -110,14 +119,34 @@ interface FixtureWithPicks extends Fixture {
   away: FixtureTeamWithPicksAndStats
 }
 
-const PlayerStatIcons: React.FC<{ playerStats: PlayerStats }> = (props) => {
-  const { playerStats } = props
-  if (playerStats.goals_scored) {
-    return <PlayerEventIcon src={goalIcon} />
-  } else {
-    return null
-  }
+const statIconMapper: { [identifier: string]: string } = {
+  goals_scored: goalIcon,
+  assists: assistIcon,
+  red_cards: redCardIcon,
+  yellow_cards: yellowCardIcon
 }
+
+let PlayerStatIcons: React.FC<{ playerStats: PlayerStats }> = (props) => {
+  const { playerStats } = props
+
+  const elements: React.ReactNode[] = []
+
+  Object.keys(statIconMapper).forEach((identifier) => {
+    const playerValue = playerStats[identifier]
+    if (playerValue) {
+      for (let ii = 0; ii < playerValue; ii++) {
+        elements.push(
+          <PlayerStatIcon
+            src={statIconMapper[identifier]}
+            key={`${identifier}-${ii}`}
+          />
+        )
+      }
+    }
+  })
+  return <PlayerStatIconsWrapper children={elements} />
+}
+PlayerStatIcons = React.memo(PlayerStatIcons)
 
 const TeamPicks: React.FC<{
   team: FixtureTeamWithPicksAndStats
