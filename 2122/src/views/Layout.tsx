@@ -80,6 +80,7 @@ const Layout: React.FC<{}> = (props) => {
           <NavButton children="Played" to="/played" />
           <NavButton children="Captains" to="/captains" />
           <NavButton children="Template" to="/template" />
+          <NavButton children="Value" to="/value" />
         </NavButtons>
       </Header>
       {children}

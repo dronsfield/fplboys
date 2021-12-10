@@ -179,6 +179,8 @@ const Table: React.FC<{}> = (props) => {
       teamName: name,
       totalPoints: 0,
       eventPoints: 0,
+      totalMoney: 0,
+      bankMoney: 0,
       picks: [],
       transfers: { in: [], out: [] }
     }

@@ -12,6 +12,7 @@ import Intro from "./views/Intro"
 import Layout from "./views/Layout"
 import Table from "./views/LeagueTable"
 import Played from "./views/Played"
+import SquadValue from "./views/SquadValue"
 import TemplateTeam from "./views/TemplateTeam"
 import Transfers from "./views/Transfers"
 
@@ -49,6 +50,7 @@ const App: React.FC<{}> = () => {
               <Route path="/transfers" component={Transfers} />
               <Route path="/template" component={TemplateTeam} />
               <Route path="/played" component={Played} />
+              <Route path="/value" component={SquadValue} />
               <Route path="/" component={Intro} />
             </Switch>
           </Layout>

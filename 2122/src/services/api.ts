@@ -96,7 +96,9 @@ type PickRT = Static<typeof PickRT>
 
 const GameweekRT = Record({
   entry_history: Record({
-    points: Number
+    points: Number,
+    value: Number,
+    bank: Number
   }),
   picks: Array(PickRT)
 })
@@ -185,6 +187,8 @@ export interface Manager {
   rank: number
   totalPoints: number
   eventPoints: number
+  totalMoney: number
+  bankMoney: number
   picks: {
     [id: number]: PickType
   }
@@ -376,6 +380,8 @@ export async function getLeague(
         rank: result.rank,
         totalPoints: result.total,
         eventPoints: gw.entry_history.points,
+        totalMoney: gw.entry_history.value * 0.1,
+        bankMoney: gw.entry_history.bank * 0.1,
         picks,
         transfers
       }
