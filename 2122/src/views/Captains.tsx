@@ -47,25 +47,25 @@ const Captains: React.FC<{}> = (props) => {
 
   return (
     <Skeleton>
-      <Table
-        data={aggregateData}
-        headers={aggregateHeaders}
-        renderCell={(header, rowData) => {
-          return rowData[header]
-        }}
-        renderHeader={(header) => {
-          if (header === "count") {
-            return "Captain count"
-          } else {
-            return header
-          }
-        }}
-        cellWidths={{
-          player: ["auto"],
-          count: ["auto"]
-        }}
-      />
       <Section>
+        <Table
+          data={aggregateData}
+          headers={aggregateHeaders}
+          renderCell={(header, rowData) => {
+            return rowData[header]
+          }}
+          renderHeader={(header) => {
+            if (header === "count") {
+              return "Captain count"
+            } else {
+              return header
+            }
+          }}
+          cellWidths={{
+            player: ["auto"],
+            count: ["auto"]
+          }}
+        />
         <Spacer height={16} />
         <Table
           data={data}
