@@ -38,8 +38,8 @@ const CustomLink = (props: any) => (
 const NavButton = styled(CustomLink)`
   font-weight: bold;
   text-transform: uppercase;
-  padding: 5px 7px;
-  border-radius: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
   margin: 3px 3px;
   color: white;
   text-decoration: none;
@@ -74,11 +74,12 @@ const Layout: React.FC<{}> = (props) => {
           <NavButton children="Info" to="/" />
           <NavButton children="Prizes" to="/table" />
           <NavButton children="Fixtures" to="/fixtures" />
-          <NavButton children="Transfers" to="/transfers" />
+          <NavButton children="Captains" to="/captains" />
+          <NavButton children="Chips" to="/chips" />
         </NavButtons>
         <NavButtons>
+          <NavButton children="Transfers" to="/transfers" />
           <NavButton children="Played" to="/played" />
-          <NavButton children="Captains" to="/captains" />
           <NavButton children="Template" to="/template" />
           <NavButton children="Value" to="/value" />
         </NavButtons>

@@ -17,7 +17,10 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     color: ${colors.text};
     font-family: IBM Plex Sans, sans-serif;
-    font-size: 13px;
+    font-size: 11px;
+    @media (min-width: 360px) {
+      font-size: 13px;
+    }
     @media (min-width: 500px) {
       font-size: 15px;
     }

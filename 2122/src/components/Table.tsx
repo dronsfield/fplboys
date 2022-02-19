@@ -27,8 +27,8 @@ const Row = styled.tr`
 
 const HeaderRow = styled(Row)``
 
-type CellWidth = number | "hide" | "auto" | "nowrap"
-type CellWidths = [CellWidth] | [CellWidth, CellWidth]
+export type CellWidth = number | "hide" | "auto" | "nowrap"
+export type CellWidths = [CellWidth] | [CellWidth, CellWidth]
 
 interface CellProps {
   widths: CellWidths

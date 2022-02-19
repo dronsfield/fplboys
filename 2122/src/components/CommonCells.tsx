@@ -1,5 +1,6 @@
 import React from "react"
 import { Manager } from "src/services/api"
+import colors from "src/style/colors"
 import { formatName } from "src/util/formatName"
 import styled from "styled-components"
 
@@ -22,13 +23,13 @@ function formatMoney(
     const prefix = showSign ? "+" : ""
     return {
       children: `${prefix}£${absText}`,
-      color: showColor ? "green" : undefined
+      color: showColor ? colors.green : undefined
     }
   } else if (value === 0) {
     const prefix = showSign ? "±" : ""
-    return { children: `${prefix}£${absText}`, color: "#bbb" }
+    return { children: `${prefix}£${absText}`, color: colors.grey }
   } else {
-    return { children: `-£${absText}`, color: "#bbb" }
+    return { children: `-£${absText}`, color: colors.grey }
   }
 }
 

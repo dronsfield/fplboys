@@ -182,6 +182,7 @@ const Table: React.FC<{}> = (props) => {
       totalMoney: 0,
       bankMoney: 0,
       picks: [],
+      chips: [],
       transfers: { in: [], out: [] }
     }
     setManagers((originalManagers) => {

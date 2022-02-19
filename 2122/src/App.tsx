@@ -7,6 +7,7 @@ import appConfig from "./appConfig"
 import { LeagueContextProvider } from "./LeagueContext"
 import GlobalStyle from "./style/global"
 import Captains from "./views/Captains"
+import Chips from "./views/Chips"
 import FixturePicks from "./views/FixturePicks"
 import Intro from "./views/Intro"
 import Layout from "./views/Layout"
@@ -53,6 +54,7 @@ const App: React.FC<{}> = () => {
               <Route path="/template" component={TemplateTeam} />
               <Route path="/played" component={Played} />
               <Route path="/value" component={SquadValue} />
+              <Route path="/chips" component={Chips} />
               <Route path="/" component={Intro} />
             </Switch>
           </Layout>
